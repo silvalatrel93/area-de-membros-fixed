@@ -240,6 +240,7 @@ export default function Dashboard() {
         onClose={() => setShowCompletion(false)}
         lesson={completedLesson}
         onNextLesson={handleNextLesson}
+        hasNextLesson={completedLesson ? !!findNextLesson(completedLesson) : false}
       />
     </>
   );

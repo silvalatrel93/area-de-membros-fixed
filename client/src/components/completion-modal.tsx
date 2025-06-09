@@ -59,12 +59,6 @@ export default function CompletionModal({ isOpen, onClose, lesson, onNextLesson,
                 </>
               )}
             </Button>
-          </div>="ghost"
-              className="w-full bg-netflix-light-gray hover:bg-netflix-text-secondary text-netflix-text hover:text-netflix-dark py-2 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 font-medium text-sm sm:text-base"
-            >
-              <Home className="mr-2" size={16} />
-              Voltar ao Início
-            </Button>
           </div>
         </div>
       </DialogContent>
