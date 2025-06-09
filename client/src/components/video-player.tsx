@@ -183,19 +183,24 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
           </div>
         </div>
         
-        <CardContent className="p-6">
-          <div className="flex items-start justify-between mb-4">
+        <CardContent className="p-3 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4">
             <div className="flex-1">
-              <h4 className="text-xl font-semibold text-netflix-text mb-2">{lesson.title}</h4>
-              <p className="netflix-text-secondary mb-4">{lesson.description}</p>
+              <h4 className="text-lg sm:text-xl font-semibold text-netflix-text mb-2">{lesson.title}</h4>
+              <p className="netflix-text-secondary mb-3 sm:mb-4 text-sm sm:text-base">{lesson.description}</p>
             </div>
             <Button
               onClick={() => completeLessonMutation.mutate()}
               disabled={completeLessonMutation.isPending}
-              className="bg-green-600 hover:bg-green-700 text-white ml-4"
+              className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto sm:ml-4 py-2 sm:py-2 px-3 sm:px-4 text-sm sm:text-base"
             >
               <Check className="mr-2" size={16} />
-              {completeLessonMutation.isPending ? "Salvando..." : "Marcar como Concluída"}
+              <span className="hidden sm:inline">
+                {completeLessonMutation.isPending ? "Salvando..." : "Marcar como Concluída"}
+              </span>
+              <span className="sm:hidden">
+                {completeLessonMutation.isPending ? "Salvando..." : "Concluir Aula"}
+              </span>
             </Button>
           </div>
           
