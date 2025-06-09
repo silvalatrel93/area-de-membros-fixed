@@ -36,6 +36,8 @@ export const authService = {
     localStorage.removeItem("learnflix_auth");
     localStorage.removeItem("learnflix_progress");
     queryClient.clear();
+    // Force page reload to ensure clean state
+    window.location.href = "/login";
   },
 
   getCurrentUser(): AuthUser | null {
