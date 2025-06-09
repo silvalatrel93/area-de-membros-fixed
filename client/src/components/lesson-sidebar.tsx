@@ -130,10 +130,26 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
           <div className="space-y-2 sm:space-y-3">
             <Button 
               variant="ghost"
-              className="w-full bg-netflix-light-gray hover:bg-netflix-red text-netflix-text hover:text-white py-2 px-4 rounded-lg transition-all duration-200 text-sm font-medium"
+              onClick={handleDownloadMaterials}
+              disabled={!currentModule.materialsUrl}
+              className={`w-full py-2 px-4 rounded-lg transition-all duration-200 text-sm font-medium ${
+                currentModule.materialsUrl 
+                  ? "bg-netflix-light-gray hover:bg-netflix-red text-netflix-text hover:text-white" 
+                  : "bg-netflix-light-gray/50 text-netflix-text/50 cursor-not-allowed"
+              }`}
             >
-              <Download className="mr-2" size={16} />
-              Download Materiais
+              {getMaterialsType(currentModule.materialsUrl || '') === 'folder' ? (
+                <FolderOpen className="mr-2" size={16} />
+              ) : (
+                <Download className="mr-2" size={16} />
+              )}
+              {currentModule.materialsUrl ? (
+                getMaterialsType(currentModule.materialsUrl) === 'folder' 
+                  ? "Abrir Materiais" 
+                  : "Download Materiais"
+              ) : (
+                "Sem Materiais"
+              )}
             </Button>
             <Button 
               variant="ghost"
