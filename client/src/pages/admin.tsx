@@ -28,6 +28,7 @@ export default function AdminPage() {
   const [newModule, setNewModule] = useState({
     title: '',
     description: '',
+    imageUrl: '',
     materialsUrl: ''
   });
   const [isCreatingModule, setIsCreatingModule] = useState(false);
@@ -157,6 +158,7 @@ export default function AdminPage() {
     setNewModule({
       title: module.title,
       description: module.description || "",
+      imageUrl: module.imageUrl || "",
       materialsUrl: module.materialsUrl || "",
     });
     setShowNewModuleModal(true);
@@ -248,7 +250,7 @@ export default function AdminPage() {
       });
 
       // Reset form and close modal
-      setNewModule({ title: '', description: '', materialsUrl: '' });
+      setNewModule({ title: '', description: '', imageUrl: '', materialsUrl: '' });
       setEditingModule(null);
       setShowNewModuleModal(false);
 
@@ -576,6 +578,23 @@ export default function AdminPage() {
             </div>
 
             <div>
+              <Label htmlFor="imageUrl" className="text-netflix-text text-sm">
+                URL da Imagem de Capa (opcional)
+              </Label>
+              <Input
+                id="imageUrl"
+                type="url"
+                placeholder="https://exemplo.com/imagem.jpg"
+                value={newModule.imageUrl || ''}
+                onChange={(e) => setNewModule({ ...newModule, imageUrl: e.target.value })}
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1"
+              />
+              <p className="text-netflix-text-secondary text-xs mt-1">
+                Link para imagem que será exibida como capa do módulo
+              </p>
+            </div>
+
+            <div>
               <Label htmlFor="materialsUrl" className="text-netflix-text text-sm">
                 URL dos Materiais (opcional)
               </Label>
@@ -613,7 +632,7 @@ export default function AdminPage() {
 
               <Button
                 onClick={() => {
-                  setNewModule({ title: '', description: '', materialsUrl: '' });
+                  setNewModule({ title: '', description: '', imageUrl: '', materialsUrl: '' });
                   setEditingModule(null);
                   setShowNewModuleModal(false);
                 }}
