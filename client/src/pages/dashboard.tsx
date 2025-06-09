@@ -258,7 +258,7 @@ export default function Dashboard() {
                     Bem-Vindo á Área de Membros {"</>"} IA Revolution
                   </h2>
                   <p className="text-base sm:text-lg netflix-text-secondary mb-4 sm:mb-6 max-w-2xl">
-                    Continue sua jornada de aprendizado. Você está progredindo muito bem!
+                    Você está a um clique de transformar seu conhecimento.
                   </p>
                   <div className="grid grid-cols-3 sm:flex sm:flex-row gap-2 sm:gap-4 justify-center lg:justify-start">
                     <Card className="bg-netflix-red/10 border-netflix-red/20">
