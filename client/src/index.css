@@ -127,6 +127,16 @@
   }
 }
 
+@layer components {
+  .text-netflix-text {
+    color: var(--netflix-text);
+  }
+  
+  .text-netflix-text-secondary {
+    color: var(--netflix-text-secondary);
+  }
+}
+
 /* Custom video controls styling */
 video::-webkit-media-controls {
   display: none !important;

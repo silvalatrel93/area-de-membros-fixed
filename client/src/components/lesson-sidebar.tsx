@@ -22,7 +22,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
     return "pending";
   };
 
-  const formatDuration = (seconds?: number) => {
+  const formatDuration = (seconds?: number | null) => {
     if (!seconds) return "";
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -32,12 +32,12 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
   return (
     <div className="lg:col-span-1">
       <Card className="bg-netflix-gray">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-netflix-text">
+        <CardHeader className="pb-3 sm:pb-6">
+          <CardTitle className="text-base sm:text-lg font-semibold text-netflix-text">
             Aulas do Módulo
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-3 sm:p-6">
           {/* Lessons List */}
           <div className="space-y-3 mb-6">
             {currentModule.lessons.map((lesson) => {

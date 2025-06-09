@@ -50,20 +50,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-netflix-dark via-netflix-gray to-netflix-dark">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-netflix-dark via-netflix-gray to-netflix-dark px-4 sm:px-6 lg:px-8">
       {/* Background overlay with subtle pattern */}
       <div className="absolute inset-0 opacity-10">
-        <div className="grid grid-cols-12 gap-4 h-full p-8">
-          <div className="col-span-3 bg-gradient-to-b from-netflix-red/20 to-transparent rounded-lg"></div>
-          <div className="col-span-2 bg-gradient-to-t from-netflix-red/10 to-transparent rounded-lg"></div>
-          <div className="col-span-4 bg-gradient-to-r from-netflix-red/15 to-transparent rounded-lg"></div>
-          <div className="col-span-3 bg-gradient-to-l from-netflix-red/10 to-transparent rounded-lg"></div>
+        <div className="grid grid-cols-6 sm:grid-cols-12 gap-2 sm:gap-4 h-full p-4 sm:p-8">
+          <div className="col-span-2 sm:col-span-3 bg-gradient-to-b from-netflix-red/20 to-transparent rounded-lg"></div>
+          <div className="col-span-1 sm:col-span-2 bg-gradient-to-t from-netflix-red/10 to-transparent rounded-lg"></div>
+          <div className="col-span-2 sm:col-span-4 bg-gradient-to-r from-netflix-red/15 to-transparent rounded-lg"></div>
+          <div className="col-span-1 sm:col-span-3 bg-gradient-to-l from-netflix-red/10 to-transparent rounded-lg"></div>
         </div>
       </div>
       
-      <div className="relative z-10 w-full max-w-md px-6">
+      <div className="relative z-10 w-full max-w-sm sm:max-w-md">
         <Card className="bg-netflix-gray/80 backdrop-blur-sm border-netflix-light-gray/50">
-          <CardContent className="p-8">
+          <CardContent className="p-6 sm:p-8">
             {/* Logo/Brand */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-netflix-text mb-2">

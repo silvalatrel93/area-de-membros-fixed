@@ -16,7 +16,16 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
     const module = modules.find(m => m.id === moduleId);
     if (!module) return 0;
     
-    return progressService.calculateModuleProgress(module.lessons, progress);
+    // Convert progress data to match expected interface
+    const progressData = progress.map(p => ({
+      lessonId: p.lessonId,
+      moduleId: p.moduleId,
+      isCompleted: p.isCompleted,
+      progressPercentage: p.progressPercentage,
+      lastWatchedAt: p.lastWatchedAt instanceof Date ? p.lastWatchedAt.toISOString() : p.lastWatchedAt
+    }));
+    
+    return progressService.calculateModuleProgress(module.lessons, progressData);
   };
 
   const isModuleUnlocked = (moduleIndex: number) => {

@@ -143,27 +143,30 @@ export default function AdminPage() {
     <div className="min-h-screen bg-netflix-dark">
       {/* Navigation Header */}
       <nav className="bg-netflix-dark/95 backdrop-blur-sm border-b border-netflix-light-gray/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-bold text-netflix-text">
-                <Play className="inline text-netflix-red mr-2" size={24} />
-                LearnFlix Admin
+              <h1 className="text-lg sm:text-xl font-bold text-netflix-text">
+                <Play className="inline text-netflix-red mr-1 sm:mr-2" size={20} />
+                <span className="hidden sm:inline">LearnFlix Admin</span>
+                <span className="sm:hidden">Admin</span>
               </h1>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 onClick={() => setLocation("/dashboard")}
                 variant="outline"
                 size="sm"
-                className="border-netflix-text-secondary text-netflix-text-secondary hover:bg-netflix-text-secondary hover:text-netflix-dark"
+                className="border-netflix-text-secondary text-netflix-text-secondary hover:bg-netflix-text-secondary hover:text-netflix-dark text-xs sm:text-sm px-2 sm:px-3"
               >
-                <ArrowLeft className="mr-1" size={16} /> Voltar
+                <ArrowLeft className="mr-1" size={14} />
+                <span className="hidden sm:inline">Voltar</span>
+                <span className="sm:hidden">←</span>
               </Button>
               <Button
                 onClick={() => authService.logout()}
-                className="bg-netflix-red hover:bg-red-700 text-white"
+                className="bg-netflix-red hover:bg-red-700 text-white text-xs sm:text-sm px-2 sm:px-3"
                 size="sm"
               >
                 Sair

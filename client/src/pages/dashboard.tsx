@@ -172,11 +172,11 @@ export default function Dashboard() {
 
           {/* Current Lesson Section */}
           {currentLesson && (
-            <section className="py-8 px-4 sm:px-6 lg:px-8">
+            <section className="py-4 sm:py-6 lg:py-8 px-3 sm:px-6 lg:px-8">
               <div className="max-w-7xl mx-auto">
-                <h3 className="text-2xl font-bold text-netflix-text mb-6">Aula Atual</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-netflix-text mb-4 sm:mb-6">Aula Atual</h3>
                 
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                   <VideoPlayer 
                     lesson={currentLesson}
                     onComplete={() => handleLessonComplete(currentLesson)}
