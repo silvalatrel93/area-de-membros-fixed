@@ -154,15 +154,12 @@ export default function AdminPage() {
 
   const handleEditModule = (module: ModuleWithLessons) => {
     setEditingModule(module);
-    moduleForm.reset({
+    setNewModule({
       title: module.title,
       description: module.description || "",
-      imageUrl: module.imageUrl || "",
       materialsUrl: module.materialsUrl || "",
-      orderIndex: module.orderIndex,
-      isActive: module.isActive,
     });
-    setShowModuleDialog(true);
+    setShowNewModuleModal(true);
   };
 
   const handleCloseModuleDialog = () => {
@@ -230,8 +227,11 @@ export default function AdminPage() {
 
     setIsCreatingModule(true);
     try {
-      const response = await fetch('/api/modules', {
-        method: 'POST',
+      const url = editingModule ? `/api/modules/${editingModule.id}` : '/api/modules';
+      const method = editingModule ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -239,25 +239,26 @@ export default function AdminPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao criar módulo');
+        throw new Error(editingModule ? 'Erro ao atualizar módulo' : 'Erro ao criar módulo');
       }
 
       toast({
-        title: "Módulo criado com sucesso",
-        description: `O módulo "${newModule.title}" foi criado.`,
+        title: editingModule ? "Módulo atualizado com sucesso" : "Módulo criado com sucesso",
+        description: `O módulo "${newModule.title}" foi ${editingModule ? 'atualizado' : 'criado'}.`,
       });
 
       // Reset form and close modal
       setNewModule({ title: '', description: '', materialsUrl: '' });
+      setEditingModule(null);
       setShowNewModuleModal(false);
 
       // Refresh modules list
       queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
 
     } catch (error) {
-      console.error('Erro ao criar módulo:', error);
+      console.error('Erro ao processar módulo:', error);
       toast({
-        title: "Erro ao criar módulo",
+        title: editingModule ? "Erro ao atualizar módulo" : "Erro ao criar módulo",
         description: error instanceof Error ? error.message : "Tente novamente mais tarde.",
         variant: "destructive",
       });
@@ -323,9 +324,7 @@ export default function AdminPage() {
             <span className="sm:hidden">Admin</span>
           </h2>
 
-          <Dialog open={showModuleDialog} onOpenChange={handleCloseModuleDialog}>
-            <DialogTrigger asChild>
-              <Button
+          <Button
                 onClick={() => setShowNewModuleModal(true)}
                 size="sm"
                 className="w-full sm:w-auto bg-netflix-red/80 hover:bg-netflix-red/90 text-white"
@@ -333,74 +332,7 @@ export default function AdminPage() {
                 <Plus className="mr-2" size={16} />
                 Novo Módulo
               </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-netflix-gray border-netflix-light-gray">
-              <DialogHeader>
-                <DialogTitle className="text-netflix-text">
-                  {editingModule ? "Editar Módulo" : "Criar Novo Módulo"}
-                </DialogTitle>
-              </DialogHeader>
-              <form onSubmit={moduleForm.handleSubmit(handleCreateModule)} className="space-y-4">
-                <div>
-                  <Label htmlFor="title" className="text-netflix-text">Título</Label>
-                  <Input
-                    id="title"
-                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
-                    {...moduleForm.register("title")}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="description" className="text-netflix-text">Descrição</Label>
-                  <Textarea
-                    id="description"
-                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
-                    {...moduleForm.register("description")}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="imageUrl" className="text-netflix-text">URL da Imagem</Label>
-                  <Input
-                    id="imageUrl"
-                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
-                    {...moduleForm.register("imageUrl")}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="materialsUrl" className="text-netflix-text">URL dos Materiais</Label>
-                  <Input
-                    id="materialsUrl"
-                    placeholder="Link do Google Drive (pasta ou arquivo) ou link direto"
-                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
-                    {...moduleForm.register("materialsUrl")}
-                  />
-                  <div className="mt-2 text-xs netflix-text-secondary space-y-1">
-                    <p><strong>Pasta Google Drive:</strong> https://drive.google.com/drive/folders/ID</p>
-                    <p><strong>Arquivo Google Drive:</strong> https://drive.google.com/file/d/ID/view</p>
-                    <p><strong>Link Direto:</strong> https://exemplo.com/material.pdf</p>
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="orderIndex" className="text-netflix-text">Ordem</Label>
-                  <Input
-                    id="orderIndex"
-                    type="number"
-                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
-                    {...moduleForm.register("orderIndex", { valueAsNumber: true })}
-                  />
-                </div>
-                <Button 
-                  type="submit" 
-                  disabled={createModuleMutation.isPending || updateModuleMutation.isPending}
-                  className="w-full bg-netflix-red hover:bg-red-700"
-                >
-                  {createModuleMutation.isPending || updateModuleMutation.isPending 
-                    ? (editingModule ? "Atualizando..." : "Criando...") 
-                    : (editingModule ? "Atualizar Módulo" : "Criar Módulo")
-                  }
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+            
         </div>
 
         <div className="space-y-4">
@@ -611,7 +543,7 @@ export default function AdminPage() {
         <DialogContent className="bg-netflix-gray border-netflix-light-gray max-w-md">
           <DialogHeader>
             <DialogTitle className="text-netflix-text">
-              Criar Novo Módulo
+              {editingModule ? "Editar Módulo" : "Criar Novo Módulo"}
             </DialogTitle>
           </DialogHeader>
 
@@ -669,12 +601,12 @@ export default function AdminPage() {
                 {isCreatingModule ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Criando...
+                    {editingModule ? "Atualizando..." : "Criando..."}
                   </>
                 ) : (
                   <>
                     <Plus className="mr-2" size={16} />
-                    Criar Módulo
+                    {editingModule ? "Atualizar Módulo" : "Criar Módulo"}
                   </>
                 )}
               </Button>
@@ -682,6 +614,7 @@ export default function AdminPage() {
               <Button
                 onClick={() => {
                   setNewModule({ title: '', description: '', materialsUrl: '' });
+                  setEditingModule(null);
                   setShowNewModuleModal(false);
                 }}
                 variant="ghost"
