@@ -91,7 +91,13 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
     setIsSubmittingSupport(true);
 
     try {
-      const sessionId = localStorage.getItem('sessionId');
+      let sessionId = localStorage.getItem('sessionId');
+      
+      // Se não há sessionId, gerar um temporário
+      if (!sessionId) {
+        sessionId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem('sessionId', sessionId);
+      }
       
       const response = await fetch('/api/support/request', {
         method: 'POST',

@@ -232,10 +232,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         lessonId: z.number(),
         moduleId: z.number(),
         message: z.string().min(10, "Mensagem deve ter pelo menos 10 caracteres"),
-        sessionId: z.string()
+        sessionId: z.string().optional()
       });
 
-      const { userEmail, lessonId, moduleId, message, sessionId } = supportSchema.parse(req.body);
+      const { userEmail, lessonId, moduleId, message, sessionId: providedSessionId } = supportSchema.parse(req.body);
+
+      // Gerar sessionId se não foi fornecido
+      const sessionId = providedSessionId || `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
       // Buscar informações da aula e módulo
       const lesson = await storage.getLesson(lessonId);
