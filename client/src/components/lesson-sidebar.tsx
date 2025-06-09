@@ -160,7 +160,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
                 <div
                   key={lesson.id}
                   onClick={() => onLessonSelect(lesson)}
-                  className="rounded-lg p-3 sm:p-4 cursor-pointer transition-colors duration-200 border bg-netflix-red/20 border-netflix-red/30 ml-[-21px] mr-[-21px] mt-[15px] mb-[15px] pt-[14px] pb-[14px] text-[#ff0000]"
+                  className="rounded-lg p-3 sm:p-4 cursor-pointer transition-colors duration-200 border bg-netflix-red/20 border-netflix-red/30 mt-[15px] mb-[15px] text-[#ff0000] pt-[15px] pb-[15px] pl-[10px] pr-[10px] ml-[-15px] mr-[-15px]"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
