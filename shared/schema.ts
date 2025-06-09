@@ -113,4 +113,5 @@ export type ModuleWithLessons = Module & {
 
 export type LessonWithProgress = Lesson & {
   progress?: Progress;
+  isCompleted?: boolean;
 };
