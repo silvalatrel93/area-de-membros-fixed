@@ -330,9 +330,15 @@ export default function AdminPage() {
                                   <Label htmlFor="videoUrl" className="text-netflix-text">URL do Vídeo</Label>
                                   <Input
                                     id="videoUrl"
+                                    placeholder="Cole o link do Google Drive, YouTube ou vídeo direto"
                                     className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
                                     {...lessonForm.register("videoUrl")}
                                   />
+                                  <div className="mt-2 text-xs netflix-text-secondary space-y-1">
+                                    <p><strong>Google Drive:</strong> https://drive.google.com/file/d/ID/view</p>
+                                    <p><strong>YouTube:</strong> https://youtube.com/watch?v=ID</p>
+                                    <p><strong>Vídeo Direto:</strong> https://exemplo.com/video.mp4</p>
+                                  </div>
                                 </div>
                                 <div>
                                   <Label htmlFor="duration" className="text-netflix-text">Duração (segundos)</Label>
