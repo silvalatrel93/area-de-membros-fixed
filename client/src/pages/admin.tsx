@@ -412,7 +412,7 @@ export default function AdminPage() {
                                   <Label htmlFor="lessonTitle" className="text-netflix-text">Título</Label>
                                   <Input
                                     id="lessonTitle"
-                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
+                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80"
                                     {...lessonForm.register("title")}
                                   />
                                 </div>
@@ -420,7 +420,7 @@ export default function AdminPage() {
                                   <Label htmlFor="lessonDescription" className="text-netflix-text">Descrição</Label>
                                   <Textarea
                                     id="lessonDescription"
-                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
+                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80"
                                     {...lessonForm.register("description")}
                                   />
                                 </div>
@@ -429,7 +429,7 @@ export default function AdminPage() {
                                   <Input
                                     id="videoUrl"
                                     placeholder="Cole o link do Google Drive, YouTube ou vídeo direto"
-                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
+                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80"
                                     {...lessonForm.register("videoUrl")}
                                   />
                                   <div className="mt-2 text-xs netflix-text-secondary space-y-1">
@@ -443,7 +443,7 @@ export default function AdminPage() {
                                   <Input
                                     id="duration"
                                     type="number"
-                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
+                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80"
                                     {...lessonForm.register("duration", { valueAsNumber: true })}
                                   />
                                 </div>
@@ -452,7 +452,7 @@ export default function AdminPage() {
                                   <Input
                                     id="lessonOrderIndex"
                                     type="number"
-                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
+                                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80"
                                     {...lessonForm.register("orderIndex", { valueAsNumber: true })}
                                   />
                                 </div>
@@ -558,7 +558,7 @@ export default function AdminPage() {
                 placeholder="Ex: Fundamentos de JavaScript"
                 value={newModule.title}
                 onChange={(e) => setNewModule({ ...newModule, title: e.target.value })}
-                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1"
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80 mt-1"
               />
             </div>
 
@@ -571,7 +571,7 @@ export default function AdminPage() {
                 placeholder="Descreva o que será aprendido neste módulo..."
                 value={newModule.description}
                 onChange={(e) => setNewModule({ ...newModule, description: e.target.value })}
-                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1 min-h-[80px]"
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80 mt-1 min-h-[80px]"
               />
             </div>
 
@@ -585,7 +585,7 @@ export default function AdminPage() {
                 placeholder="https://exemplo.com/imagem.jpg"
                 value={newModule.imageUrl || ''}
                 onChange={(e) => setNewModule({ ...newModule, imageUrl: e.target.value })}
-                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1"
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80 mt-1"
               />
               <p className="text-netflix-text-secondary text-xs mt-1">
                 Link para imagem que será exibida como capa do módulo
@@ -602,7 +602,7 @@ export default function AdminPage() {
                 placeholder="https://drive.google.com/..."
                 value={newModule.materialsUrl}
                 onChange={(e) => setNewModule({ ...newModule, materialsUrl: e.target.value })}
-                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1"
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text/80 mt-1"
               />
               <p className="text-netflix-text-secondary text-xs mt-1">
                 Link para Google Drive, Dropbox ou outro serviço de armazenamento
