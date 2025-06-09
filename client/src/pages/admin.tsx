@@ -540,7 +540,7 @@ export default function AdminPage() {
 
       {/* New Module Modal */}
       <Dialog open={showNewModuleModal} onOpenChange={setShowNewModuleModal}>
-        <DialogContent className="bg-netflix-gray border-netflix-light-gray max-w-md">
+        <DialogContent className="bg-netflix-gray/60 backdrop-blur-sm border-netflix-light-gray/30 shadow-lg shadow-netflix-dark/20 max-w-md">
           <DialogHeader>
             <DialogTitle className="text-netflix-text">
               {editingModule ? "Editar Módulo" : "Criar Novo Módulo"}
