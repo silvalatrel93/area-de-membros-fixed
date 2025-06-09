@@ -296,7 +296,7 @@ export default function AdminPage() {
                 onClick={() => setLocation("/dashboard")}
                 variant="outline"
                 size="sm"
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm bg-netflix-light-gray/20 hover:bg-netflix-light-gray/30 border-netflix-light-gray/40"
               >
                 <ArrowLeft className="mr-1 sm:mr-2" size={16} />
                 <span className="hidden sm:inline">Voltar</span>
@@ -305,7 +305,7 @@ export default function AdminPage() {
               <Button
                 onClick={() => authService.logout()}
                 size="sm"
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm bg-netflix-red/80 hover:bg-netflix-red/90"
               >
                 Sair
               </Button>
@@ -328,7 +328,7 @@ export default function AdminPage() {
               <Button
                 onClick={() => setShowNewModuleModal(true)}
                 size="sm"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto bg-netflix-red/80 hover:bg-netflix-red/90 text-white"
               >
                 <Plus className="mr-2" size={16} />
                 Novo Módulo
