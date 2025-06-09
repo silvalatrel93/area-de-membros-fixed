@@ -200,7 +200,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
           </div>
 
           {/* Module Actions */}
-          <div className="space-y-2 sm:space-y-3 mt-[0px] mb-[0px] pt-[0px] pb-[0px] ml-[-12px] mr-[-12px] pl-[-7px] pr-[-7px] text-[#ff0000]">
+          <div className="space-y-2 sm:space-y-3 mt-[0px] mb-[0px] pt-[0px] pb-[0px] pl-[-7px] pr-[-7px] text-[#ff0000] ml-[-2px] mr-[-2px]">
             <Button 
               onClick={() => {
                 if (currentModule.materialsUrl) {
