@@ -32,6 +32,7 @@ export default function AdminPage() {
       title: "",
       description: "",
       imageUrl: "",
+      materialsUrl: "",
       orderIndex: 0,
       isActive: true,
     },
@@ -221,6 +222,20 @@ export default function AdminPage() {
                   />
                 </div>
                 <div>
+                  <Label htmlFor="materialsUrl" className="text-netflix-text">URL dos Materiais</Label>
+                  <Input
+                    id="materialsUrl"
+                    placeholder="Link do Google Drive (pasta ou arquivo) ou link direto"
+                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text"
+                    {...moduleForm.register("materialsUrl")}
+                  />
+                  <div className="mt-2 text-xs netflix-text-secondary space-y-1">
+                    <p><strong>Pasta Google Drive:</strong> https://drive.google.com/drive/folders/ID</p>
+                    <p><strong>Arquivo Google Drive:</strong> https://drive.google.com/file/d/ID/view</p>
+                    <p><strong>Link Direto:</strong> https://exemplo.com/material.pdf</p>
+                  </div>
+                </div>
+                <div>
                   <Label htmlFor="orderIndex" className="text-netflix-text">Ordem</Label>
                   <Input
                     id="orderIndex"
@@ -292,6 +307,11 @@ export default function AdminPage() {
                       <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">
                         {module.lessons.length} Vídeos
                       </span>
+                      {module.materialsUrl && (
+                        <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">
+                          Materiais
+                        </span>
+                      )}
                     </div>
                     
                     {selectedModule?.id === module.id && (
