@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS modules (
     title TEXT NOT NULL,
     description TEXT,
     image_url TEXT,
+    materials_url TEXT,
     order_index INTEGER DEFAULT 0 NOT NULL,
     is_active BOOLEAN DEFAULT TRUE NOT NULL,
     created_at TIMESTAMP DEFAULT NOW() NOT NULL
