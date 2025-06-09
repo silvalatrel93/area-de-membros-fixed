@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [currentLesson, setCurrentLesson] = useState<LessonWithProgress | null>(null);
   const [showCompletion, setShowCompletion] = useState(false);
   const [completedLesson, setCompletedLesson] = useState<LessonWithProgress | null>(null);
+  const [localCompletedLessons, setLocalCompletedLessons] = useState<Set<number>>(new Set());
   const sessionId = authService.getSessionId();
 
   const { data: modules, isLoading: modulesLoading } = useQuery({
@@ -38,19 +39,22 @@ export default function Dashboard() {
   const handleLessonComplete = (lesson: LessonWithProgress) => {
     console.log("Lesson completed:", lesson);
     
+    // Adicionar a aula ao conjunto de aulas concluídas localmente
+    setLocalCompletedLessons(prev => new Set(prev).add(lesson.id));
+    
     // Atualizar imediatamente o estado da aula atual para mostrar como concluída
     const updatedLesson = {
       ...lesson,
       isCompleted: true,
-      progress: {
+      progress: lesson.progress ? {
         ...lesson.progress,
         isCompleted: true,
         progressPercentage: 100
-      }
+      } : undefined
     };
     
     setCurrentLesson(updatedLesson);
-    setCompletedLesson(updatedLesson);
+    setCompletedLesson(lesson);
     setShowCompletion(true);
   };
 
@@ -115,18 +119,49 @@ export default function Dashboard() {
     setCurrentLesson(lesson);
   };
 
+  // Combinar progresso do servidor com progresso local
+  const getCombinedProgress = () => {
+    const serverProgress = Array.isArray(progressData) ? progressData : [];
+    const combinedProgress = [...serverProgress];
+    
+    // Adicionar aulas concluídas localmente que ainda não estão no servidor
+    localCompletedLessons.forEach(lessonId => {
+      const existingProgress = combinedProgress.find(p => p.lessonId === lessonId);
+      if (!existingProgress || !existingProgress.isCompleted) {
+        if (existingProgress) {
+          existingProgress.isCompleted = true;
+          existingProgress.progressPercentage = 100;
+        } else {
+          const lesson = modulesList.flatMap(m => m.lessons).find(l => l.id === lessonId);
+          if (lesson) {
+            combinedProgress.push({
+              id: 0, // Temporário
+              sessionId: sessionId || '',
+              lessonId: lessonId,
+              moduleId: lesson.moduleId,
+              isCompleted: true,
+              progressPercentage: 100,
+              lastWatchedAt: new Date()
+            });
+          }
+        }
+      }
+    });
+    
+    return combinedProgress;
+  };
+
 
   if (modulesLoading) {
     return <LoadingOverlay />;
   }
 
   const modulesList = modules as ModuleWithLessons[] || [];
-  const progress = Array.isArray(progressData) ? progressData : [];
+  const combinedProgress = getCombinedProgress();
 
   // Calculate overall progress
   const totalLessons = modulesList.reduce((acc, module) => acc + module.lessons.length, 0);
-  const progressArray = Array.isArray(progress) ? progress : [];
-  const completedLessons = progressArray.filter(p => p.isCompleted).length;
+  const completedLessons = combinedProgress.filter(p => p.isCompleted).length;
   const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
   return (
@@ -236,7 +271,7 @@ export default function Dashboard() {
             <div className="max-w-7xl mx-auto">
               <ModuleCarousel 
                 modules={modulesList} 
-                progress={progress}
+                progress={combinedProgress}
                 onLessonSelect={handleLessonSelect}
               />
             </div>
@@ -259,7 +294,7 @@ export default function Dashboard() {
                     <LessonSidebar 
                       currentLesson={currentLesson}
                       modules={modulesList}
-                      progress={progress}
+                      progress={combinedProgress}
                       onLessonSelect={handleLessonSelect}
                     />
                   </div>
