@@ -150,7 +150,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
             Aulas do Módulo
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-3 sm:p-6 pt-[18px] pb-[18px]">
+        <CardContent className="p-3 sm:p-6 pt-[21px] pb-[21px]">
           {/* Lessons List */}
           <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
             {currentModule.lessons.map((lesson) => {
