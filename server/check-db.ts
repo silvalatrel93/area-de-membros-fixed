@@ -52,7 +52,8 @@ async function checkDatabase() {
   }
 }
 
-if (require.main === module) {
+// Check if this file is being run directly
+if (import.meta.url === `file://${process.argv[1]}`) {
   checkDatabase().catch(console.error);
 }
 
