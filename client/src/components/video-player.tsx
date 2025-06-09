@@ -39,12 +39,15 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
     if (!video) return;
 
     const updateTime = () => {
-      const currentProgress = (video.currentTime / video.duration) * 100;
+      const currentProgress = video.duration && !isNaN(video.duration) && video.duration > 0 
+        ? (video.currentTime / video.duration) * 100 
+        : 0;
+      
       setCurrentTime(video.currentTime);
       setProgress(currentProgress);
       
-      // Update progress every 10 seconds
-      if (Math.floor(video.currentTime) % 10 === 0) {
+      // Update progress every 10 seconds - only if we have valid progress
+      if (Math.floor(video.currentTime) % 10 === 0 && !isNaN(currentProgress) && currentProgress >= 0) {
         updateProgressMutation.mutate(Math.round(currentProgress));
       }
     };

@@ -14,12 +14,17 @@ export const progressService = {
     const sessionId = authService.getSessionId();
     if (!sessionId) return;
 
+    // Validate progress percentage
+    const validProgress = !isNaN(progressPercentage) && isFinite(progressPercentage) 
+      ? Math.max(0, Math.min(100, Math.round(progressPercentage)))
+      : 0;
+
     await apiRequest("POST", "/api/progress", {
       sessionId,
       lessonId,
       moduleId,
-      progressPercentage,
-      isCompleted: progressPercentage >= 100,
+      progressPercentage: validProgress,
+      isCompleted: validProgress >= 100,
     });
   },
 
