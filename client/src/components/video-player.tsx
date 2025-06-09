@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { progressService } from "@/lib/progress";
 import { queryClient } from "@/lib/queryClient";
+import { authService } from "@/lib/auth";
 import { convertGoogleDriveUrl, getVideoType, convertYouTubeUrl } from "@/lib/video-utils";
 import { Play, Pause, SkipBack, SkipForward, Maximize, Check } from "lucide-react";
 import type { LessonWithProgress } from "@shared/schema";

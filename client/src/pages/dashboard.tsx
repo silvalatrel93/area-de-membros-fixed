@@ -26,7 +26,7 @@ export default function Dashboard() {
   });
 
   const { data: progressData } = useQuery({
-    queryKey: ["/api/progress", sessionId],
+    queryKey: [`/api/progress?sessionId=${sessionId}`, sessionId],
     enabled: !!sessionId,
   });
 
@@ -59,7 +59,7 @@ export default function Dashboard() {
       }
       
       // Refresh progress data from server
-      queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/progress?sessionId=${sessionId}`] });
       queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
     }, 1500);
   };
