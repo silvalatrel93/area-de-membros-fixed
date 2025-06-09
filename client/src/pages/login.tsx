@@ -63,8 +63,8 @@ export default function LoginPage() {
           <CardContent className="p-6 sm:p-8">
             {/* Logo/Brand */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-netflix-text mb-2">
-                <Play className="inline-block text-netflix-red mr-2" size={32} />
+              <h1 className="text-3xl font-bold text-netflix-text mb-2 animate-pulse-glow">
+                <Play className="inline-block text-netflix-red mr-2 animate-pulse" size={32} />
                 LearnFlix
               </h1>
               <p className="netflix-text-secondary text-sm">Área de membros exclusiva</p>
