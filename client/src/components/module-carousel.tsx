@@ -103,7 +103,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
             return (
               <Card 
                 key={module.id}
-                className="rounded-lg text-card-foreground shadow-sm flex-none w-72 sm:w-80 bg-netflix-gray hover:scale-105 transition-transform duration-300 border relative overflow-hidden border-netflix-light-gray/30 ml-[-13px] mr-[-13px]"
+                className="rounded-lg text-card-foreground shadow-sm flex-none w-72 sm:w-80 bg-netflix-gray hover:scale-105 transition-transform duration-300 border relative overflow-hidden border-netflix-light-gray/30 ml-[9px] mr-[9px]"
               >
                 {/* Matrix Code Effect Background */}
                 <MatrixCodeEffect speed={80} className="absolute inset-0 opacity-15" />
