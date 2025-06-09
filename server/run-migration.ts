@@ -37,7 +37,8 @@ async function runMigration() {
   }
 }
 
-if (require.main === module) {
+// Check if this file is being run directly
+if (import.meta.url === `file://${process.argv[1]}`) {
   runMigration().catch(console.error);
 }
 
