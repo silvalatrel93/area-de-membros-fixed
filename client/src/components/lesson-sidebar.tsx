@@ -2,8 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { convertGoogleDriveDownloadUrl, getMaterialsType } from "@/lib/video-utils";
-import { Play, CheckCircle, Clock, Download, MessageCircle, ExternalLink, FolderOpen } from "lucide-react";
+import { Play, CheckCircle, Clock, Download, MessageCircle, ExternalLink, FolderOpen, Send } from "lucide-react";
 import type { ModuleWithLessons, Progress, LessonWithProgress } from "@shared/schema";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface LessonSidebarProps {
   currentLesson: LessonWithProgress;
@@ -15,6 +20,10 @@ interface LessonSidebarProps {
 export default function LessonSidebar({ currentLesson, modules, progress, onLessonSelect }: LessonSidebarProps) {
   const { toast } = useToast();
   const currentModule = modules.find(m => m.id === currentLesson.moduleId);
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [supportEmail, setSupportEmail] = useState("");
+  const [supportMessage, setSupportMessage] = useState("");
+  const [isSubmittingSupport, setIsSubmittingSupport] = useState(false);
 
   if (!currentModule) return null;
 
@@ -67,6 +76,32 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')} min`;
+  };
+
+  const handleSupportSubmit = async () => {
+    if (!supportMessage.trim()) {
+      toast({
+        title: "Mensagem inválida",
+        description: "Por favor, escreva sua dúvida antes de enviar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmittingSupport(true);
+
+    // Simulate an API call
+    setTimeout(() => {
+      setIsSubmittingSupport(false);
+      setShowSupportModal(false);
+      setSupportMessage("");
+      setSupportEmail("");
+
+      toast({
+        title: "Dúvida enviada!",
+        description: "Sua dúvida foi enviada com sucesso. Nossa equipe responderá em breve.",
+      });
+    }, 1500);
   };
 
   return (
@@ -197,13 +232,95 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
                 <ExternalLink className="ml-1" size={14} />
               )}
             </Button>
-            <Button 
-              variant="ghost"
-              className="w-full bg-netflix-light-gray hover:bg-blue-600 text-netflix-text hover:text-white py-2 px-4 rounded-lg transition-all duration-200 text-sm font-medium"
-            >
-              <MessageCircle className="mr-2" size={16} />
-              Dúvidas e Suporte
-            </Button>
+            {/* Support Button */}
+          <Dialog open={showSupportModal} onOpenChange={setShowSupportModal}>
+            <DialogTrigger asChild>
+              <Button
+                variant="ghost"
+                className="w-full bg-netflix-light-gray hover:bg-blue-600 text-netflix-text hover:text-white py-2 px-4 rounded-lg transition-all duration-200 text-sm font-medium"
+              >
+                <MessageCircle className="mr-2" size={16} />
+                Dúvidas e Suporte
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-netflix-gray border-netflix-light-gray max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-netflix-text">
+                  Dúvidas sobre a aula
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-netflix-text text-sm font-medium">
+                    Aula atual: {currentLesson.title}
+                  </Label>
+                  <p className="text-netflix-text-secondary text-xs mt-1">
+                    Módulo: {currentModule?.title}
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="supportEmail" className="text-netflix-text text-sm">
+                    Email (opcional)
+                  </Label>
+                  <Input
+                    id="supportEmail"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={supportEmail}
+                    onChange={(e) => setSupportEmail(e.target.value)}
+                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="supportMessage" className="text-netflix-text text-sm">
+                    Descreva sua dúvida *
+                  </Label>
+                  <Textarea
+                    id="supportMessage"
+                    placeholder="Descreva detalhadamente sua dúvida ou problema..."
+                    value={supportMessage}
+                    onChange={(e) => setSupportMessage(e.target.value)}
+                    className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1 min-h-[100px]"
+                    maxLength={500}
+                  />
+                  <p className="text-netflix-text-secondary text-xs mt-1">
+                    {supportMessage.length}/500 caracteres
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowSupportModal(false)}
+                    className="flex-1 border-netflix-text-secondary text-netflix-text-secondary"
+                    disabled={isSubmittingSupport}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={handleSupportSubmit}
+                    disabled={isSubmittingSupport}
+                    className="flex-1 bg-netflix-red hover:bg-red-700 text-white"
+                  >
+                    {isSubmittingSupport ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                        Enviando...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="mr-2" size={16} />
+                        Enviar
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
           </div>
         </CardContent>
       </Card>
