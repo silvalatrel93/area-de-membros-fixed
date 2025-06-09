@@ -176,23 +176,23 @@ export default function Dashboard() {
                 </p>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 mb-6 lg:mb-8 max-w-2xl mx-auto">
-                  <Card className="smooth-card">
-                    <CardContent className="p-3 md:p-4 lg:p-6 text-center backdrop-blur-sm">
-                      <div className="text-lg md:text-xl lg:text-2xl font-bold text-netflix-red">{completedLessons}</div>
-                      <div className="text-xs md:text-sm lg:text-base netflix-text-secondary whitespace-nowrap">Concluídas</div>
+                <div className="grid grid-cols-3 gap-3 md:gap-6 lg:gap-8 xl:gap-10 mb-6 lg:mb-8 max-w-sm md:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto">
+                  <Card className="smooth-card hover:scale-105 transition-transform duration-300">
+                    <CardContent className="p-3 md:p-6 lg:p-8 xl:p-10 text-center backdrop-blur-sm">
+                      <div className="text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-netflix-red mb-1 md:mb-2">{completedLessons}</div>
+                      <div className="text-xs md:text-sm lg:text-base xl:text-lg netflix-text-secondary font-medium">Concluídas</div>
                     </CardContent>
                   </Card>
-                  <Card className="smooth-card">
-                    <CardContent className="p-3 md:p-4 lg:p-6 text-center backdrop-blur-sm">
-                      <div className="text-lg md:text-xl lg:text-2xl font-bold text-blue-400">{modulesList.length}</div>
-                      <div className="text-xs md:text-sm lg:text-base netflix-text-secondary whitespace-nowrap">Módulos</div>
+                  <Card className="smooth-card hover:scale-105 transition-transform duration-300">
+                    <CardContent className="p-3 md:p-6 lg:p-8 xl:p-10 text-center backdrop-blur-sm">
+                      <div className="text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-400 mb-1 md:mb-2">{modulesList.length}</div>
+                      <div className="text-xs md:text-sm lg:text-base xl:text-lg netflix-text-secondary font-medium">Módulos</div>
                     </CardContent>
                   </Card>
-                  <Card className="smooth-card">
-                    <CardContent className="p-3 md:p-4 lg:p-6 text-center backdrop-blur-sm">
-                      <div className="text-lg md:text-xl lg:text-2xl font-bold text-green-400">{overallProgress}%</div>
-                      <div className="text-xs md:text-sm lg:text-base netflix-text-secondary whitespace-nowrap">Progresso</div>
+                  <Card className="smooth-card hover:scale-105 transition-transform duration-300">
+                    <CardContent className="p-3 md:p-6 lg:p-8 xl:p-10 text-center backdrop-blur-sm">
+                      <div className="text-lg md:text-2xl lg:text-3xl xl:text-4xl font-bold text-green-400 mb-1 md:mb-2">{overallProgress}%</div>
+                      <div className="text-xs md:text-sm lg:text-base xl:text-lg netflix-text-secondary font-medium">Progresso</div>
                     </CardContent>
                   </Card>
                 </div>
