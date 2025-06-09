@@ -169,7 +169,7 @@ export default function Dashboard() {
             <div className="space-y-6 lg:space-y-8">
               <div className="text-center mb-6 lg:mb-8">
                 <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-netflix-text mb-3 lg:mb-4">
-                  Bem-vindo à <span className="text-netflix-red">IA Revolution</span>
+                  Bem-vindo à Área de Membros <span className="text-netflix-red font-mono">&lt;/&gt;</span> <span className="text-netflix-red">IA Revolution</span>
                 </h2>
                 <p className="text-netflix-text-secondary text-sm md:text-base lg:text-lg mb-4 lg:mb-6">
                   Escolha um módulo para começar sua jornada.
