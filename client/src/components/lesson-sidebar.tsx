@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Play, CheckCircle, Clock, Download, MessageCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { convertGoogleDriveDownloadUrl, getMaterialsType } from "@/lib/video-utils";
+import { Play, CheckCircle, Clock, Download, MessageCircle, ExternalLink, FolderOpen } from "lucide-react";
 import type { ModuleWithLessons, Progress, LessonWithProgress } from "@shared/schema";
 
 interface LessonSidebarProps {
@@ -11,6 +13,7 @@ interface LessonSidebarProps {
 }
 
 export default function LessonSidebar({ currentLesson, modules, progress, onLessonSelect }: LessonSidebarProps) {
+  const { toast } = useToast();
   const currentModule = modules.find(m => m.id === currentLesson.moduleId);
   
   if (!currentModule) return null;
@@ -20,6 +23,43 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
     if (lessonProgress?.isCompleted) return "completed";
     if (lessonId === currentLesson.id) return "current";
     return "pending";
+  };
+
+  const handleDownloadMaterials = () => {
+    if (!currentModule.materialsUrl) {
+      toast({
+        title: "Materiais não disponíveis",
+        description: "Este módulo não possui materiais para download.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const materialsType = getMaterialsType(currentModule.materialsUrl);
+    const processedUrl = convertGoogleDriveDownloadUrl(currentModule.materialsUrl);
+
+    if (materialsType === 'folder') {
+      // Open Google Drive folder in new tab
+      window.open(currentModule.materialsUrl, '_blank');
+      toast({
+        title: "Pasta de materiais aberta",
+        description: "A pasta do Google Drive foi aberta em uma nova aba."
+      });
+    } else if (materialsType === 'file') {
+      // Direct download from Google Drive
+      window.open(processedUrl, '_blank');
+      toast({
+        title: "Download iniciado",
+        description: "O download dos materiais foi iniciado."
+      });
+    } else {
+      // Direct link
+      window.open(processedUrl, '_blank');
+      toast({
+        title: "Link aberto",
+        description: "O link dos materiais foi aberto em uma nova aba."
+      });
+    }
   };
 
   const formatDuration = (seconds?: number | null) => {

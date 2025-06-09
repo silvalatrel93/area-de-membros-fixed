@@ -34,3 +34,40 @@ export function convertYouTubeUrl(url: string): string {
   }
   return url;
 }
+
+export function convertGoogleDriveDownloadUrl(url: string): string {
+  // Convert Google Drive sharing URLs to direct download URLs
+  if (!url) return '';
+  
+  // Handle folder URLs - keep as is for folder access
+  if (url.includes('/folders/')) {
+    return url;
+  }
+  
+  // Handle file URLs - convert to direct download
+  const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileMatch) {
+    const fileId = fileMatch[1];
+    return `https://drive.google.com/uc?export=download&id=${fileId}`;
+  }
+  
+  // If already a download URL, return as is
+  if (url.includes('drive.google.com/uc?export=download')) {
+    return url;
+  }
+  
+  return url;
+}
+
+export function getMaterialsType(url: string): 'folder' | 'file' | 'direct' {
+  if (!url) return 'direct';
+  
+  if (url.includes('drive.google.com')) {
+    if (url.includes('/folders/')) {
+      return 'folder';
+    }
+    return 'file';
+  }
+  
+  return 'direct';
+}

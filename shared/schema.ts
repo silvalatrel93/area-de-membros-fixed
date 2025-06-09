@@ -16,6 +16,7 @@ export const modules = pgTable("modules", {
   title: text("title").notNull(),
   description: text("description"),
   imageUrl: text("image_url"),
+  materialsUrl: text("materials_url"), // Google Drive folder or file link
   orderIndex: integer("order_index").notNull().default(0),
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
