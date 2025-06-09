@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { progressService } from "@/lib/progress";
 import { ChevronLeft, ChevronRight, Play, Lock } from "lucide-react";
+import MatrixCodeEffect from "@/components/matrix-code-effect";
 import type { ModuleWithLessons, Progress as ProgressType, LessonWithProgress } from "@shared/schema";
 
 interface ModuleCarouselProps {
@@ -103,18 +104,24 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
             return (
               <Card 
                 key={module.id}
-                className={`flex-none w-72 sm:w-80 bg-netflix-gray hover:scale-105 transition-transform duration-300 border ${
+                className={`flex-none w-72 sm:w-80 bg-netflix-gray hover:scale-105 transition-transform duration-300 border relative overflow-hidden ${
                   moduleProgress > 0 ? 'border-netflix-red/30' : 'border-netflix-light-gray/30'
                 }`}
               >
+                {/* Matrix Code Effect Background */}
+                <MatrixCodeEffect speed={80} className="absolute inset-0 opacity-15" />
+                
                 {module.imageUrl && (
-                  <img 
-                    src={module.imageUrl}
-                    alt={module.title}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
+                  <div className="relative">
+                    <img 
+                      src={module.imageUrl}
+                      alt={module.title}
+                      className="w-full h-48 object-cover rounded-t-lg"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-netflix-gray via-transparent to-transparent"></div>
+                  </div>
                 )}
-                <CardContent className="p-6">
+                <CardContent className="p-6 relative z-10">
                   <div className="flex items-center justify-between mb-3">
                     <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                       !isUnlocked 
