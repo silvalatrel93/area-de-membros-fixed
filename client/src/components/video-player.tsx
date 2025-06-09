@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { progressService } from "@/lib/progress";
 import { queryClient } from "@/lib/queryClient";
+import { convertGoogleDriveUrl, getVideoType, convertYouTubeUrl } from "@/lib/video-utils";
 import { Play, Pause, SkipBack, SkipForward, Maximize, Check } from "lucide-react";
 import type { LessonWithProgress } from "@shared/schema";
 
@@ -20,6 +21,15 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [progress, setProgress] = useState(0);
+  
+  // Determine video type and convert URL if needed
+  const videoUrl = lesson.videoUrl || '';
+  const videoType = getVideoType(videoUrl);
+  const processedUrl = videoType === 'drive' 
+    ? convertGoogleDriveUrl(videoUrl)
+    : videoType === 'youtube' 
+    ? convertYouTubeUrl(videoUrl)
+    : videoUrl;
 
   const completeLessonMutation = useMutation({
     mutationFn: () => {
