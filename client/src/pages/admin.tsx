@@ -218,28 +218,7 @@ export default function AdminPage() {
 
   const modulesList = modules as ModuleWithLessons[] || [];
 
-  const fetchModules = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/modules');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setModules(data);
-    } catch (error) {
-      console.error("Could not fetch modules:", error);
-      toast({
-        title: "Erro ao carregar módulos",
-        description: error instanceof Error ? error.message : "Tente novamente mais tarde.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const createModule = async () => {
+  const createNewModule = async () => {
     if (!newModule.title.trim() || !newModule.description.trim()) {
       toast({
         title: "Campos obrigatórios",
@@ -263,8 +242,6 @@ export default function AdminPage() {
         throw new Error('Erro ao criar módulo');
       }
 
-      const createdModule = await response.json();
-
       toast({
         title: "Módulo criado com sucesso",
         description: `O módulo "${newModule.title}" foi criado.`,
@@ -275,7 +252,7 @@ export default function AdminPage() {
       setShowNewModuleModal(false);
 
       // Refresh modules list
-      fetchModules();
+      queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
 
     } catch (error) {
       console.error('Erro ao criar módulo:', error);
@@ -718,7 +695,7 @@ export default function AdminPage() {
 
             <div className="flex gap-3 mt-6">
               <Button
-                onClick={createModule}
+                onClick={createNewModule}
                 disabled={isCreatingModule}
                 className="flex-1 bg-netflix-red hover:bg-red-700 text-white"
               >
