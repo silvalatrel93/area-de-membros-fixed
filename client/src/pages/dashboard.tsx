@@ -35,13 +35,50 @@ export default function Dashboard() {
     setLocation("/login");
   };
 
+  const handleLessonComplete = (lesson: LessonWithProgress) => {
+    setCompletedLesson(lesson);
+    setShowCompletion(true);
+  };
+
   const handleLessonSelect = (lesson: LessonWithProgress) => {
     setCurrentLesson(lesson);
   };
 
-  const handleLessonComplete = (lesson: LessonWithProgress) => {
-    setCompletedLesson(lesson);
-    setShowCompletion(true);
+  const findNextLesson = (currentLesson: LessonWithProgress): LessonWithProgress | null => {
+    if (!modulesList) return null;
+
+    // Encontrar o módulo atual
+    const currentModule = modulesList.find(m => m.id === currentLesson.moduleId);
+    if (!currentModule) return null;
+
+    // Encontrar a posição da aula atual no módulo
+    const currentLessonIndex = currentModule.lessons.findIndex(l => l.id === currentLesson.id);
+
+    // Se há uma próxima aula no mesmo módulo
+    if (currentLessonIndex < currentModule.lessons.length - 1) {
+      return currentModule.lessons[currentLessonIndex + 1];
+    }
+
+    // Procurar o próximo módulo
+    const currentModuleIndex = modulesList.findIndex(m => m.id === currentModule.id);
+    for (let i = currentModuleIndex + 1; i < modulesList.length; i++) {
+      const nextModule = modulesList[i];
+      if (nextModule.lessons.length > 0) {
+        return nextModule.lessons[0];
+      }
+    }
+
+    return null; // Não há próxima aula
+  };
+
+  const handleNextLesson = () => {
+    if (!completedLesson) return;
+
+    const nextLesson = findNextLesson(completedLesson);
+    if (nextLesson) {
+      setCurrentLesson(nextLesson);
+    }
+    setShowCompletion(false);
   };
 
   if (modulesLoading) {
@@ -72,7 +109,7 @@ export default function Dashboard() {
                   <span className="xs:hidden">LF</span>
                 </h1>
               </div>
-              
+
               {/* Navigation Links - Hidden on mobile */}
               <div className="hidden lg:block">
                 <div className="ml-10 flex items-baseline space-x-6">
@@ -87,7 +124,7 @@ export default function Dashboard() {
                   </a>
                 </div>
               </div>
-              
+
               {/* User Actions */}
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <button className="netflix-text-secondary hover:text-netflix-text transition-colors duration-200 p-2">
@@ -175,7 +212,7 @@ export default function Dashboard() {
             <section className="py-4 sm:py-6 lg:py-8 px-3 sm:px-6 lg:px-8">
               <div className="max-w-7xl mx-auto">
                 <h3 className="text-xl sm:text-2xl font-bold text-netflix-text mb-4 sm:mb-6">Aula Atual</h3>
-                
+
                 <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                   <div className="order-1 lg:col-span-2">
                     <VideoPlayer 
@@ -202,10 +239,7 @@ export default function Dashboard() {
         isOpen={showCompletion}
         onClose={() => setShowCompletion(false)}
         lesson={completedLesson}
-        onNextLesson={() => {
-          // Logic to find and play next lesson
-          setShowCompletion(false);
-        }}
+        onNextLesson={handleNextLesson}
       />
     </>
   );

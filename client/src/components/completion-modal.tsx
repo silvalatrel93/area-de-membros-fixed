@@ -9,9 +9,10 @@ interface CompletionModalProps {
   onClose: () => void;
   lesson: LessonWithProgress | null;
   onNextLesson: () => void;
+  hasNextLesson: boolean;
 }
 
-export default function CompletionModal({ isOpen, onClose, lesson, onNextLesson }: CompletionModalProps) {
+export default function CompletionModal({ isOpen, onClose, lesson, onNextLesson, hasNextLesson }: CompletionModalProps) {
   if (!lesson) return null;
 
   return (
@@ -31,16 +32,34 @@ export default function CompletionModal({ isOpen, onClose, lesson, onNextLesson 
           </p>
           
           <div className="space-y-2 sm:space-y-3">
-            <Button 
-              onClick={onNextLesson}
-              className="w-full bg-netflix-red hover:bg-red-700 text-white py-2 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 font-medium text-sm sm:text-base"
-            >
-              <SkipForward className="mr-2" size={16} />
-              Próxima Aula
-            </Button>
+            {hasNextLesson && (
+              <Button 
+                onClick={onNextLesson}
+                className="w-full bg-netflix-red hover:bg-red-700 text-white py-2 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 font-medium text-sm sm:text-base"
+              >
+                <SkipForward className="mr-2" size={16} />
+                <span className="hidden sm:inline">Próxima Aula</span>
+                <span className="sm:hidden">Próxima</span>
+              </Button>
+            )}
             <Button 
               onClick={onClose}
               variant="ghost"
+              className="w-full bg-netflix-light-gray hover:bg-netflix-light-gray/80 text-netflix-text py-2 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 font-medium text-sm sm:text-base"
+            >
+              {hasNextLesson ? (
+                <>
+                  <span className="hidden sm:inline">Continuar Depois</span>
+                  <span className="sm:hidden">Fechar</span>
+                </>
+              ) : (
+                <>
+                  <span className="hidden sm:inline">Voltar ao Dashboard</span>
+                  <span className="sm:hidden">Fechar</span>
+                </>
+              )}
+            </Button>
+          </div>="ghost"
               className="w-full bg-netflix-light-gray hover:bg-netflix-text-secondary text-netflix-text hover:text-netflix-dark py-2 sm:py-3 px-3 sm:px-4 rounded-lg transition-colors duration-200 font-medium text-sm sm:text-base"
             >
               <Home className="mr-2" size={16} />
