@@ -1,4 +1,7 @@
 
+import { config } from 'dotenv';
+config(); // Carregar variáveis de ambiente
+
 import { supabaseAdmin } from './supabase';
 import { db } from './db';
 import { users, modules, lessons, progress } from '@shared/schema';
