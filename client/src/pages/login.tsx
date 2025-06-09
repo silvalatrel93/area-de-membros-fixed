@@ -10,15 +10,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/lib/auth";
 import { Shield, LogIn } from "lucide-react";
-import { TypewriterEffect } from "@/components/typewriter-effect";
-import { MatrixEffect } from "@/components/matrix-effect";
-import { BrainLogo } from "@/components/brain-logo";
+import MatrixEffect from "@/components/matrix-effect";
+import TypewriterEffect from "@/components/typewriter-effect";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-
+  
   const form = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -35,7 +34,7 @@ export default function LoginPage() {
         title: "Login realizado com sucesso!",
         description: `Bem-vindo${user.isAdmin ? ", administrador" : ""}!`,
       });
-
+      
       if (user.isAdmin) {
         setLocation("/admin");
       } else {
@@ -56,17 +55,17 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 sm:px-6 lg:px-8">
       {/* Matrix Effect Background */}
       <MatrixEffect />
-
+      
       {/* Dark overlay to improve readability */}
       <div className="absolute inset-0 bg-black/30 z-10"></div>
-
+      
       <div className="relative z-20 w-full max-w-sm sm:max-w-md">
         <Card className="bg-netflix-gray/90 backdrop-blur-md border-netflix-light-gray/50 shadow-2xl shadow-netflix-red/20">
           <CardContent className="p-6 sm:p-8">
             {/* Logo/Brand */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-netflix-text mb-2 animate-pulse-glow">
-                <span className="inline-block text-netflix-red mr-2 animate-pulse text-4xl font-mono glitch-effect" data-text="</>"><BrainLogo /></span>
+                <span className="inline-block text-netflix-red mr-2 animate-pulse text-4xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
                 <TypewriterEffect 
                   text="IA REVOLUTION"
                   speed={120}
@@ -77,7 +76,7 @@ export default function LoginPage() {
               </h1>
               <p className="netflix-text-secondary text-sm">Área de membros exclusiva</p>
             </div>
-
+            
             {/* Login Form */}
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div>
@@ -93,7 +92,7 @@ export default function LoginPage() {
                   <p className="text-red-400 text-sm mt-1">{form.formState.errors.email.message}</p>
                 )}
               </div>
-
+              
               <div>
                 <Label htmlFor="password" className="text-netflix-text mb-2">Senha</Label>
                 <Input
@@ -107,7 +106,7 @@ export default function LoginPage() {
                   <p className="text-red-400 text-sm mt-1">{form.formState.errors.password.message}</p>
                 )}
               </div>
-
+              
               <Button 
                 type="submit" 
                 disabled={isLoading}
@@ -121,7 +120,7 @@ export default function LoginPage() {
                 Entrar na Plataforma
               </Button>
             </form>
-
+            
             {/* Info */}
             <div className="mt-6 text-center">
               <p className="netflix-text-secondary text-xs">

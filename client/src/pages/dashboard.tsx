@@ -10,7 +10,6 @@ import VideoPlayer from "@/components/video-player";
 import LessonSidebar from "@/components/lesson-sidebar";
 import LoadingOverlay from "@/components/loading-overlay";
 import CompletionModal from "@/components/completion-modal";
-import { BrainLogo } from "@/components/brain-logo";
 import { Home, Bookmark, TrendingUp, Search, Bell, LogOut } from "lucide-react";
 import type { ModuleWithLessons, LessonWithProgress } from "@shared/schema";
 
@@ -191,9 +190,12 @@ export default function Dashboard() {
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 sm:h-16">
               {/* Logo */}
-              <div className="flex items-center space-x-2">
-                <BrainLogo size={32} className="text-netflix-red animate-bounce" />
-                <h1 className="text-lg font-bold text-netflix-text hidden sm:block">IA Revolution</h1>
+              <div className="flex items-center">
+                <h1 className="text-lg sm:text-xl font-bold text-netflix-text">
+                  <span className="inline text-netflix-red mr-1 sm:mr-2 text-xl font-mono">&lt;/&gt;</span>
+                  <span className="hidden xs:inline">IA REVOLUTION</span>
+                  <span className="xs:hidden">IA REV</span>
+                </h1>
               </div>
 
               {/* Navigation Links - Hidden on mobile */}

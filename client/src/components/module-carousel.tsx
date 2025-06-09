@@ -72,7 +72,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
     <div className="mb-6 sm:mb-8">
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <h3 className="text-xl sm:text-2xl font-bold text-netflix-text">Módulos do Curso</h3>
-        <div className="hidden sm:flex space-x-2 ml-[2px] mr-[2px] pl-[0px] pr-[0px] mt-[0px] mb-[0px] pt-[6px] pb-[6px]">
+        <div className="hidden sm:flex space-x-2">
           <Button
             variant="ghost"
             size="sm"
@@ -91,6 +91,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
           </Button>
         </div>
       </div>
+      
       {/* Horizontal Scroll Container */}
       <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
         <div className="flex space-x-3 sm:space-x-4 pb-4" style={{ width: "max-content" }}>
