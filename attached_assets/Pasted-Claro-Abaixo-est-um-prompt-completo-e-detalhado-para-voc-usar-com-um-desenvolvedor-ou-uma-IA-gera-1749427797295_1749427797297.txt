@@ -1,0 +1,145 @@
+Claro! Abaixo está um prompt completo e detalhado para você usar com um desenvolvedor ou uma IA geradora de código (como eu) para criar um sistema de área de membros estilo Netflix para cursos em vídeo. O sistema será simples, moderno e prático tanto para o aluno quanto para o administrador:
+
+
+---
+
+🎯 Prompt Completo para Área de Membros Estilo Netflix para Cursos em Vídeo
+
+Quero que você desenvolva uma área de membros simples, moderna e responsiva, com as seguintes características:
+
+
+---
+
+👨‍🏫 Área de Acesso do Aluno (Front-End)
+
+1. Autenticação por Login Único:
+
+O sistema terá apenas um único login e senha global que será compartilhado com os alunos que compraram o curso.
+
+Não é necessário criar vários usuários ou sistemas de registro.
+
+Tela de login simples e bonita, com fundo moderno e campos de email/senha.
+
+
+
+2. Layout Netflix-like:
+
+Interface em estilo carrossel horizontal com os módulos e vídeos.
+
+Player de vídeo embutido, responsivo e moderno (compatível com dispositivos móveis e desktops).
+
+Nome do curso/módulo/vídeo visível.
+
+Exibir status de progresso com:
+
+✅ Botão "Marcar como concluído" por aula/módulo.
+
+Progresso geral visível para o aluno, indicando quantas aulas já foram assistidas.
+
+
+
+
+3. Player de Vídeo:
+
+Utilizar player responsivo e leve (por exemplo: Plyr, Video.js ou similar).
+
+Suportar vídeos hospedados localmente ou linkados de serviços como Vimeo Pro ou Bunny.net (se for o caso).
+
+Opção de voltar ou avançar 10s, mudar velocidade e fullscreen.
+
+
+
+4. Estrutura de Curso:
+
+Separar por módulos, e dentro de cada módulo, aulas em vídeo.
+
+Cada módulo pode ser minimizado/expandido.
+
+Os vídeos podem ser carregados em carrossel horizontal (estilo série).
+
+
+
+
+
+---
+
+🛠️ Painel Administrativo (Back-End)
+
+1. Acesso simples via URL protegida (ex: /admin):
+
+Login com senha única de administrador.
+
+Interface mínima e funcional para upload/gerenciamento dos cursos.
+
+
+
+2. Funcionalidades do Painel:
+
+Adicionar/editar/remover módulos e aulas.
+
+Fazer upload ou adicionar link do vídeo (suportar links e arquivos).
+
+Organizar ordem das aulas/módulos via drag and drop (se possível).
+
+Marcar uma aula como ativa/inativa.
+
+
+
+3. Banco de Dados:
+
+Armazenar estrutura do curso (módulos/aulas), link dos vídeos, nomes, descrição e status (concluído ou não).
+
+
+
+
+
+---
+
+📱 Outras Especificações Técnicas
+
+Layout 100% responsivo (desktop, tablet e mobile).
+
+Design minimalista, moderno, com cores neutras.
+
+O progresso do aluno pode ser salvo localmente no navegador (LocalStorage), já que o acesso é único e não exige múltiplos usuários.
+
+Botão “Sair” para voltar à tela de login.
+
+Sistema pode ser hospedado em servidores simples como Vercel, Replit ou Hostinger.
+
+
+
+---
+
+✅ Extras Desejáveis (opcional):
+
+Mensagem de boas-vindas personalizada na dashboard.
+
+Imagem de capa ou miniatura para cada vídeo/módulo.
+
+Efeito de loading leve ao trocar de vídeo.
+
+Feedback visual quando o vídeo é concluído.
+
+
+
+---
+
+📌 Tecnologias sugeridas (mas não obrigatórias):
+
+Front-end: React.js, TailwindCSS
+
+Back-end: Node.js com Express (ou Firebase/Supabase para facilitar)
+
+Banco de dados: SQLite, PostgreSQL ou Firestore
+
+Player de vídeo: Plyr.js ou Video.js
+
+
+
+---
+
+Se quiser, posso começar a gerar esse sistema agora mesmo por partes: primeiro a tela de login, depois a área de cursos, e em seguida o painel administrativo.
+
+Quer que eu comece o desenvolvimento com base nesse prompt?
+
