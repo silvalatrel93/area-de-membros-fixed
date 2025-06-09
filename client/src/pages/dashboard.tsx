@@ -246,10 +246,11 @@ export default function Dashboard() {
         </nav>
 
         {/* Main Content */}
-        <main className="pt-14 sm:pt-16">
+        <main className="pt-14 sm:pt-16 futuristic-bg min-h-screen">
           {/* Welcome Hero Section */}
           <section className="relative py-6 sm:py-8 lg:py-12 px-3 sm:px-6 lg:px-8">
-            <div className="absolute inset-0 bg-gradient-to-r from-netflix-dark via-netflix-gray/50 to-netflix-dark opacity-80"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-black via-red-950/30 to-black opacity-90"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-red-900/10 via-transparent to-red-900/10"></div>
             <div className="relative max-w-7xl mx-auto">
               <div className="text-center lg:text-left lg:flex lg:items-center lg:justify-between">
                 <div className="lg:flex-1">
@@ -285,8 +286,10 @@ export default function Dashboard() {
           </section>
 
           {/* Course Modules Carousel */}
-          <section className="py-8 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
+          <section className="relative py-8 px-4 sm:px-6 lg:px-8">
+            <div className="absolute inset-0 bg-gradient-to-b from-red-950/20 via-black/50 to-red-950/20"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-red-900/5 via-transparent to-red-900/5"></div>
+            <div className="relative max-w-7xl mx-auto">
               <ModuleCarousel 
                 modules={modulesList} 
                 progress={combinedProgress}

@@ -159,6 +159,18 @@ video::-webkit-media-controls {
   display: none !important;
 }
 
+/* Futuristic red gradient backgrounds */
+.futuristic-bg {
+  background: radial-gradient(ellipse at center, rgba(220, 38, 38, 0.15) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(139, 0, 0, 0.1) 100%);
+}
+
+.tech-glow {
+  box-shadow: 
+    0 0 20px rgba(220, 38, 38, 0.3),
+    0 0 40px rgba(220, 38, 38, 0.1),
+    inset 0 0 20px rgba(220, 38, 38, 0.05);
+}
+
 /* Loading animation enhancement */
 @keyframes pulse-glow {
   0%, 100% {
