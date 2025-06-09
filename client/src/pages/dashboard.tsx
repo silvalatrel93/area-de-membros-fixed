@@ -36,50 +36,72 @@ export default function Dashboard() {
   };
 
   const handleLessonComplete = (lesson: LessonWithProgress) => {
+    console.log("Lesson completed:", lesson);
     setCompletedLesson(lesson);
     setShowCompletion(true);
+  };
+
+  const findNextLesson = (currentLesson: LessonWithProgress) => {
+    console.log("Finding next lesson for:", currentLesson);
+    const currentModule = modulesList.find(m => m.id === currentLesson.moduleId);
+    if (!currentModule) {
+      console.log("Current module not found");
+      return null;
+    }
+
+    const currentIndex = currentModule.lessons.findIndex(l => l.id === currentLesson.id);
+    console.log("Current lesson index:", currentIndex);
+
+    // Check if there's a next lesson in the same module
+    if (currentIndex < currentModule.lessons.length - 1) {
+      const nextLesson = currentModule.lessons[currentIndex + 1];
+      console.log("Found next lesson in same module:", nextLesson);
+      return nextLesson;
+    }
+
+    // Check if there's a next module
+    const moduleIndex = modulesList.findIndex(m => m.id === currentModule.id);
+    console.log("Current module index:", moduleIndex);
+    if (moduleIndex < modulesList.length - 1) {
+      const nextModule = modulesList[moduleIndex + 1];
+      const nextLesson = nextModule.lessons[0];
+      console.log("Found next lesson in next module:", nextLesson);
+      return nextLesson;
+    }
+
+    console.log("No next lesson found");
+    return null;
+  };
+
+  const handleNextLesson = () => {
+    console.log("Handle next lesson called");
+    if (!completedLesson) {
+      console.log("No completed lesson");
+      return;
+    }
+
+    const nextLesson = findNextLesson(completedLesson);
+    console.log("Next lesson found:", nextLesson);
+
+    if (nextLesson) {
+      const lessonWithProgress: LessonWithProgress = {
+        ...nextLesson,
+        progress: progressData?.find(p => p.lessonId === nextLesson.id)?.progressPercentage || 0,
+        isCompleted: progressData?.some(p => p.lessonId === nextLesson.id && p.isCompleted) || false,
+        moduleId: nextLesson.moduleId
+      };
+      console.log("Setting new current lesson:", lessonWithProgress);
+      setCurrentLesson(lessonWithProgress);
+      setShowCompletion(false);
+    } else {
+      console.log("No next lesson available");
+    }
   };
 
   const handleLessonSelect = (lesson: LessonWithProgress) => {
     setCurrentLesson(lesson);
   };
 
-  const findNextLesson = (currentLesson: LessonWithProgress): LessonWithProgress | null => {
-    if (!modulesList) return null;
-
-    // Encontrar o módulo atual
-    const currentModule = modulesList.find(m => m.id === currentLesson.moduleId);
-    if (!currentModule) return null;
-
-    // Encontrar a posição da aula atual no módulo
-    const currentLessonIndex = currentModule.lessons.findIndex(l => l.id === currentLesson.id);
-
-    // Se há uma próxima aula no mesmo módulo
-    if (currentLessonIndex < currentModule.lessons.length - 1) {
-      return currentModule.lessons[currentLessonIndex + 1];
-    }
-
-    // Procurar o próximo módulo
-    const currentModuleIndex = modulesList.findIndex(m => m.id === currentModule.id);
-    for (let i = currentModuleIndex + 1; i < modulesList.length; i++) {
-      const nextModule = modulesList[i];
-      if (nextModule.lessons.length > 0) {
-        return nextModule.lessons[0];
-      }
-    }
-
-    return null; // Não há próxima aula
-  };
-
-  const handleNextLesson = () => {
-    if (!completedLesson) return;
-
-    const nextLesson = findNextLesson(completedLesson);
-    if (nextLesson) {
-      setCurrentLesson(nextLesson);
-    }
-    setShowCompletion(false);
-  };
 
   if (modulesLoading) {
     return <LoadingOverlay />;

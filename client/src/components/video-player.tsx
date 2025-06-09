@@ -22,11 +22,18 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
   const [progress, setProgress] = useState(0);
 
   const completeLessonMutation = useMutation({
-    mutationFn: () => progressService.markLessonComplete(lesson.id, lesson.moduleId),
+    mutationFn: () => {
+      console.log("Marking lesson complete:", lesson.id);
+      return progressService.markLessonComplete(lesson.id, lesson.moduleId);
+    },
     onSuccess: () => {
+      console.log("Lesson marked complete successfully");
       queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
       onComplete();
     },
+    onError: (error) => {
+      console.error("Error marking lesson complete:", error);
+    }
   });
 
   const updateProgressMutation = useMutation({
@@ -50,6 +57,19 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
       if (Math.floor(video.currentTime) % 10 === 0 && !isNaN(currentProgress) && currentProgress >= 0) {
         updateProgressMutation.mutate(Math.round(currentProgress));
       }
+      
+      // Auto-complete when video reaches 95% or ends
+      if (currentProgress >= 95 && !lesson.isCompleted) {
+        console.log("Video reached 95%, auto-completing lesson");
+        completeLessonMutation.mutate();
+      }
+    };
+
+    const handleVideoEnd = () => {
+      console.log("Video ended");
+      if (!lesson.isCompleted) {
+        completeLessonMutation.mutate();
+      }
     };
 
     const updateDuration = () => {
@@ -58,10 +78,12 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
 
     video.addEventListener('timeupdate', updateTime);
     video.addEventListener('loadedmetadata', updateDuration);
+    video.addEventListener('ended', handleVideoEnd);
 
     return () => {
       video.removeEventListener('timeupdate', updateTime);
       video.removeEventListener('loadedmetadata', updateDuration);
+      video.removeEventListener('ended', handleVideoEnd);
     };
   }, [lesson.id, lesson.moduleId, updateProgressMutation]);
 
