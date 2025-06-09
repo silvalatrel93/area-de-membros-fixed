@@ -9,7 +9,7 @@ import VideoPlayer from "@/components/video-player";
 import LessonSidebar from "@/components/lesson-sidebar";
 import LoadingOverlay from "@/components/loading-overlay";
 import CompletionModal from "@/components/completion-modal";
-import { Bell, LogOut } from "lucide-react";
+import { Bell, LogOut, Settings } from "lucide-react";
 import type { ModuleWithLessons, LessonWithProgress, Progress } from "@shared/schema";
 
 export default function Dashboard() {
@@ -126,11 +126,12 @@ export default function Dashboard() {
                 {authService.isAdmin() && (
                   <Button
                     onClick={() => setLocation("/admin")}
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
-                    className="border-netflix-red text-netflix-red hover:bg-netflix-red hover:text-white text-xs md:text-sm px-2 py-1 md:px-4 md:py-2 whitespace-nowrap"
+                    className="text-netflix-red hover:text-white hover:bg-netflix-red p-2 md:p-3"
                   >
-                    Admin
+                    <Settings size={16} className="md:hidden" />
+                    <Settings size={20} className="hidden md:block" />
                   </Button>
                 )}
                 <Button
