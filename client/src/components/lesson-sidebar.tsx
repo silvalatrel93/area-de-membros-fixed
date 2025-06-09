@@ -69,7 +69,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
                       )}
                       {status === "completed" && (
                         <>
-                          <CheckCircle className="text-green-400" size={16} />
+                          <div className="text-green-400 text-lg">✅</div>
                           <span className="text-green-400 text-xs font-medium">Concluída</span>
                         </>
                       )}

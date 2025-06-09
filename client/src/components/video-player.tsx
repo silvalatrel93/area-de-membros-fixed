@@ -45,7 +45,7 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
       
       // Update progress every 10 seconds
       if (Math.floor(video.currentTime) % 10 === 0) {
-        updateProgressMutation.mutate(currentProgress);
+        updateProgressMutation.mutate(Math.round(currentProgress));
       }
     };
 
