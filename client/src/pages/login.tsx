@@ -81,60 +81,61 @@ export default function LoginPage() {
                 <p className="netflix-text-secondary text-sm">Área de membros exclusiva</p>
               </div>
               
-              {/* Login Form - Mobile optimized */}
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* Responsive Login Form */}
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
                 <div>
-                  <Label htmlFor="email" className="text-netflix-text mb-3 text-sm font-medium">Email</Label>
+                  <Label htmlFor="email" className="text-netflix-text mb-2 md:mb-3 text-sm md:text-base font-medium">Email</Label>
                   <Input
                     id="email"
                     type="email"
                     placeholder="seu@email.com"
-                    className="h-14 bg-black/10 border-netflix-red/40 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-base rounded-xl backdrop-blur-sm"
+                    className="h-12 md:h-14 bg-black/10 border-netflix-red/40 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-sm md:text-base rounded-xl backdrop-blur-sm"
                     {...form.register("email")}
                   />
                   {form.formState.errors.email && (
-                    <p className="text-red-400 text-xs mt-2">{form.formState.errors.email.message}</p>
+                    <p className="text-red-400 text-xs md:text-sm mt-1 md:mt-2">{form.formState.errors.email.message}</p>
                   )}
                 </div>
                 
                 <div>
-                  <Label htmlFor="password" className="text-netflix-text mb-3 text-sm font-medium">Senha</Label>
+                  <Label htmlFor="password" className="text-netflix-text mb-2 md:mb-3 text-sm md:text-base font-medium">Senha</Label>
                   <Input
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    className="h-14 bg-black/10 border-netflix-red/40 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-base rounded-xl backdrop-blur-sm"
+                    className="h-12 md:h-14 bg-black/10 border-netflix-red/40 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-sm md:text-base rounded-xl backdrop-blur-sm"
                     {...form.register("password")}
                   />
                   {form.formState.errors.password && (
-                    <p className="text-red-400 text-xs mt-2">{form.formState.errors.password.message}</p>
+                    <p className="text-red-400 text-xs md:text-sm mt-1 md:mt-2">{form.formState.errors.password.message}</p>
                   )}
                 </div>
                 
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-14 bg-gradient-to-r from-netflix-red to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold transition-all duration-300 animate-pulse-glow text-base rounded-xl shadow-lg shadow-netflix-red/25"
+                  className="w-full h-12 md:h-14 bg-gradient-to-r from-netflix-red to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold transition-all duration-300 animate-pulse-glow text-sm md:text-base rounded-xl shadow-lg shadow-netflix-red/25"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center whitespace-nowrap">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 md:h-5 md:w-5 border-b-2 border-white mr-2"></div>
                       Entrando...
                     </div>
                   ) : (
                     <div className="flex items-center justify-center whitespace-nowrap">
-                      <LogIn className="mr-2" size={20} />
-                      Entrar na Plataforma
+                      <LogIn className="mr-2" size={16} />
+                      <span className="md:hidden">Entrar</span>
+                      <span className="hidden md:block">Entrar na Plataforma</span>
                     </div>
                   )}
                 </Button>
               </form>
               
-              {/* Security Badge - Mobile optimized */}
-              <div className="mt-6 text-center">
-                <div className="flex items-center justify-center space-x-2 bg-green-500/10 py-2 px-4 rounded-full">
-                  <Shield className="text-green-500" size={16} />
-                  <span className="netflix-text-secondary text-xs whitespace-nowrap">Acesso seguro e exclusivo</span>
+              {/* Security Badge - Responsive */}
+              <div className="mt-4 md:mt-6 text-center">
+                <div className="flex items-center justify-center space-x-2 bg-green-500/10 py-2 md:py-3 px-3 md:px-4 rounded-full">
+                  <Shield className="text-green-500" size={14} />
+                  <span className="netflix-text-secondary text-xs md:text-sm whitespace-nowrap">Acesso seguro e exclusivo</span>
                 </div>
               </div>
             </CardContent>

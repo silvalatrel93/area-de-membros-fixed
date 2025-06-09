@@ -228,6 +228,85 @@ video::-webkit-media-controls {
   display: none !important;
 }
 
+/* Enhanced animation effects */
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-glow {
+  from {
+    text-shadow: 0 0 5px rgba(220, 38, 38, 0.5), 0 0 10px rgba(220, 38, 38, 0.3);
+  }
+  to {
+    text-shadow: 0 0 10px rgba(220, 38, 38, 0.8), 0 0 20px rgba(220, 38, 38, 0.5), 0 0 30px rgba(220, 38, 38, 0.3);
+  }
+}
+
+.glitch-effect {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-effect::before,
+.glitch-effect::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch-effect::before {
+  animation: glitch-1 0.5s infinite;
+  color: rgba(255, 0, 0, 0.75);
+  z-index: -1;
+}
+
+.glitch-effect::after {
+  animation: glitch-2 0.5s infinite;
+  color: rgba(0, 255, 255, 0.75);
+  z-index: -2;
+}
+
+@keyframes glitch-1 {
+  0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translate(0px, 0px); }
+  1%, 13% { transform: translate(-1px, 0px); }
+  16%, 48% { transform: translate(1px, 0px); }
+}
+
+@keyframes glitch-2 {
+  0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translate(0px, 0px); }
+  1%, 19% { transform: translate(1px, 0px); }
+  22%, 61% { transform: translate(-1px, 0px); }
+}
+
+/* Responsive video aspect ratios */
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+@media (max-width: 768px) {
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (min-width: 1024px) {
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* Enhanced hover effects */
+.hover-scale {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
 /* Futuristic red gradient backgrounds */
 .futuristic-bg {
   background: radial-gradient(ellipse at center, rgba(220, 38, 38, 0.15) 0%, rgba(0, 0, 0, 0.8) 50%, rgba(139, 0, 0, 0.1) 100%);
