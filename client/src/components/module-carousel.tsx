@@ -72,7 +72,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
   return (
     <div className="mb-6 sm:mb-8">
       <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h3 className="text-xl sm:text-2xl font-bold text-netflix-text">Módulos do Curso</h3>
+        <h3 className="text-xl sm:text-2xl font-bold ml-[31px] mr-[31px] text-[#ffffff]">Módulos do Curso</h3>
         <div className="hidden sm:flex space-x-2">
           <Button
             variant="ghost"
