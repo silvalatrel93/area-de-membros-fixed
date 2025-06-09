@@ -6,21 +6,21 @@ export interface IStorage {
   // Auth
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   // Modules
   getModules(): Promise<ModuleWithLessons[]>;
   getModule(id: number): Promise<ModuleWithLessons | undefined>;
   createModule(module: InsertModule): Promise<Module>;
   updateModule(id: number, module: Partial<InsertModule>): Promise<Module | undefined>;
   deleteModule(id: number): Promise<boolean>;
-  
+
   // Lessons
   getLessonsByModule(moduleId: number): Promise<Lesson[]>;
   getLesson(id: number): Promise<LessonWithProgress | undefined>;
   createLesson(lesson: InsertLesson): Promise<Lesson>;
   updateLesson(id: number, lesson: Partial<InsertLesson>): Promise<Lesson | undefined>;
   deleteLesson(id: number): Promise<boolean>;
-  
+
   // Progress
   getProgress(sessionId: string): Promise<Progress[]>;
   getModuleProgress(sessionId: string, moduleId: number): Promise<Progress[]>;
@@ -44,28 +44,33 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getModules(): Promise<ModuleWithLessons[]> {
-    const modulesData = await db
-      .select()
-      .from(modules)
-      .where(eq(modules.isActive, true))
-      .orderBy(asc(modules.orderIndex));
-
-    const modulesWithLessons: ModuleWithLessons[] = [];
-    
-    for (const module of modulesData) {
-      const lessonsData = await db
+    try {
+      const modulesData = await db
         .select()
-        .from(lessons)
-        .where(and(eq(lessons.moduleId, module.id), eq(lessons.isActive, true)))
-        .orderBy(asc(lessons.orderIndex));
+        .from(modules)
+        .where(eq(modules.isActive, true))
+        .orderBy(asc(modules.orderIndex));
 
-      modulesWithLessons.push({
-        ...module,
-        lessons: lessonsData,
-      });
+      const modulesWithLessons: ModuleWithLessons[] = [];
+
+      for (const module of modulesData) {
+        const lessonsData = await db
+          .select()
+          .from(lessons)
+          .where(and(eq(lessons.moduleId, module.id), eq(lessons.isActive, true)))
+          .orderBy(asc(lessons.orderIndex));
+
+        modulesWithLessons.push({
+          ...module,
+          lessons: lessonsData,
+        });
+      }
+
+      return modulesWithLessons;
+    } catch (error) {
+      console.error("Error fetching modules:", error);
+      throw new Error(`Database error: ${error.message}`);
     }
-
-    return modulesWithLessons;
   }
 
   async getModule(id: number): Promise<ModuleWithLessons | undefined> {
@@ -85,11 +90,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createModule(moduleData: InsertModule): Promise<Module> {
-    const [module] = await db
-      .insert(modules)
-      .values(moduleData)
-      .returning();
-    return module;
+    try {
+      const [module] = await db
+        .insert(modules)
+        .values(moduleData)
+        .returning();
+      return module;
+    } catch (error) {
+      console.error("Error creating module:", error);
+      throw new Error(`Failed to create module: ${error.message}`);
+    }
   }
 
   async updateModule(id: number, moduleData: Partial<InsertModule>): Promise<Module | undefined> {
@@ -166,7 +176,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateProgress(progressData: InsertProgress): Promise<Progress> {
     const existing = await this.getLessonProgress(progressData.sessionId, progressData.lessonId);
-    
+
     if (existing) {
       const [updated] = await db
         .update(progress)

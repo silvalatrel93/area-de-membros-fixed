@@ -51,7 +51,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const modules = await storage.getModules();
       res.json(modules);
     } catch (error) {
-      res.status(500).json({ message: "Erro ao buscar módulos", error });
+      console.error("Database connection error:", error);
+      res.status(500).json({ 
+        message: "Erro ao buscar módulos", 
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
