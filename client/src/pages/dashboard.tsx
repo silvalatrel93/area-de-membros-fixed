@@ -205,16 +205,16 @@ export default function Dashboard() {
                   />
                 </div>
                 
-                {/* Mobile lesson info card */}
-                <div className="lg:hidden">
+                {/* Lesson info card - visible on all devices */}
+                <div className="w-full">
                   <Card className="smooth-card">
-                    <CardContent className="p-4">
-                      <h3 className="text-lg font-bold text-netflix-text mb-2">{currentLesson.title}</h3>
-                      <p className="text-netflix-text-secondary text-sm mb-4">{currentLesson.description}</p>
+                    <CardContent className="p-4 lg:p-6">
+                      <h3 className="text-lg lg:text-xl font-bold text-netflix-text mb-2">{currentLesson.title}</h3>
+                      <p className="text-netflix-text-secondary text-sm lg:text-base mb-4">{currentLesson.description}</p>
                       <div className="flex items-center justify-between">
-                        <span className="text-netflix-text-secondary text-sm">Progresso da Aula</span>
+                        <span className="text-netflix-text-secondary text-sm lg:text-base">Progresso da Aula</span>
                         <Button 
-                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
+                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 lg:px-6 lg:py-3 text-sm lg:text-base"
                           onClick={() => handleLessonComplete(currentLesson)}
                         >
                           ✓ Marcar como Concluída
