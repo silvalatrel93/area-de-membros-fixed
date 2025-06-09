@@ -147,7 +147,16 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
                   </div>
                   
                   <Button 
-                    onClick={() => isUnlocked && onLessonSelect(currentLesson)}
+                    onClick={() => {
+                      if (isUnlocked) {
+                        const lessonWithProgress: LessonWithProgress = {
+                          ...currentLesson,
+                          progress: progress.find(p => p.lessonId === currentLesson.id)?.progressPercentage || 0,
+                          isCompleted: progress.some(p => p.lessonId === currentLesson.id && p.isCompleted) || false
+                        };
+                        onLessonSelect(lessonWithProgress);
+                      }
+                    }}
                     disabled={!isUnlocked}
                     className={`w-full py-2 px-4 rounded-lg transition-colors duration-200 font-medium ${
                       !isUnlocked 
