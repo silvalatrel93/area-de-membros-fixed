@@ -100,34 +100,35 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="mobile-optimized gradient-bg">
+      <div className="device-optimized gradient-bg">
         {/* Navigation Header */}
         <nav className="sticky top-0 z-50 gradient-bg backdrop-blur-lg border-b border-netflix-red/20 shadow-2xl shadow-black/50">
-          <div className="px-4 max-w-md mx-auto">
-            <div className="flex items-center justify-between h-16">
+          <div className="responsive-container">
+            <div className="flex items-center justify-between h-16 lg:h-20">
               {/* Logo */}
               <div className="flex items-center flex-1">
-                <h1 className="text-lg font-bold text-netflix-text whitespace-nowrap">
-                  <span className="text-netflix-red mr-2 text-xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
-                  <span className="responsive-text">IA Revolution</span>
+                <h1 className="text-lg md:text-xl lg:text-2xl font-bold text-netflix-text whitespace-nowrap">
+                  <span className="text-netflix-red mr-2 text-xl md:text-2xl lg:text-3xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
+                  <span className="text-base md:text-lg lg:text-xl">IA Revolution</span>
                 </h1>
               </div>
 
               {/* User Actions */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 md:space-x-4">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-netflix-text hover:text-netflix-red hover:bg-transparent p-2"
+                  className="text-netflix-text hover:text-netflix-red hover:bg-transparent p-2 md:p-3"
                 >
-                  <Bell size={16} />
+                  <Bell size={16} className="md:hidden" />
+                  <Bell size={20} className="hidden md:block" />
                 </Button>
                 {authService.isAdmin() && (
                   <Button
                     onClick={() => setLocation("/admin")}
                     variant="outline"
                     size="sm"
-                    className="border-netflix-red text-netflix-red hover:bg-netflix-red hover:text-white text-xs px-2 py-1 whitespace-nowrap"
+                    className="border-netflix-red text-netflix-red hover:bg-netflix-red hover:text-white text-xs md:text-sm px-2 py-1 md:px-4 md:py-2 whitespace-nowrap"
                   >
                     Admin
                   </Button>
@@ -136,9 +137,10 @@ export default function Dashboard() {
                   onClick={handleLogout}
                   variant="ghost"
                   size="sm"
-                  className="text-netflix-text hover:text-netflix-red hover:bg-transparent p-2"
+                  className="text-netflix-text hover:text-netflix-red hover:bg-transparent p-2 md:p-3"
                 >
-                  <LogOut size={16} />
+                  <LogOut size={16} className="md:hidden" />
+                  <LogOut size={20} className="hidden md:block" />
                 </Button>
               </div>
             </div>
@@ -146,36 +148,36 @@ export default function Dashboard() {
         </nav>
 
         {/* Main Content */}
-        <main className="flex-1 px-4 py-6 max-w-md mx-auto">
+        <main className="flex-1 device-padding responsive-container">
           {!currentLesson ? (
             /* Module Selection */
-            <div className="space-y-6">
-              <div className="text-center mb-6">
-                <h2 className="text-xl font-bold text-netflix-text mb-3">
+            <div className="space-y-6 lg:space-y-8">
+              <div className="text-center mb-6 lg:mb-8">
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-netflix-text mb-3 lg:mb-4">
                   Bem-vindo à <span className="text-netflix-red">IA Revolution</span>
                 </h2>
-                <p className="text-netflix-text-secondary text-sm mb-4">
+                <p className="text-netflix-text-secondary text-sm md:text-base lg:text-lg mb-4 lg:mb-6">
                   Escolha um módulo para começar sua jornada.
                 </p>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-3 gap-2 mb-6">
+                <div className="grid grid-cols-3 gap-2 md:gap-4 lg:gap-6 mb-6 lg:mb-8 max-w-2xl mx-auto">
                   <Card className="smooth-card">
-                    <CardContent className="p-3 text-center backdrop-blur-sm">
-                      <div className="text-lg font-bold text-netflix-red">{completedLessons}</div>
-                      <div className="text-xs netflix-text-secondary whitespace-nowrap">Concluídas</div>
+                    <CardContent className="p-3 md:p-4 lg:p-6 text-center backdrop-blur-sm">
+                      <div className="text-lg md:text-xl lg:text-2xl font-bold text-netflix-red">{completedLessons}</div>
+                      <div className="text-xs md:text-sm lg:text-base netflix-text-secondary whitespace-nowrap">Concluídas</div>
                     </CardContent>
                   </Card>
                   <Card className="smooth-card">
-                    <CardContent className="p-3 text-center backdrop-blur-sm">
-                      <div className="text-lg font-bold text-blue-400">{modulesList.length}</div>
-                      <div className="text-xs netflix-text-secondary whitespace-nowrap">Módulos</div>
+                    <CardContent className="p-3 md:p-4 lg:p-6 text-center backdrop-blur-sm">
+                      <div className="text-lg md:text-xl lg:text-2xl font-bold text-blue-400">{modulesList.length}</div>
+                      <div className="text-xs md:text-sm lg:text-base netflix-text-secondary whitespace-nowrap">Módulos</div>
                     </CardContent>
                   </Card>
                   <Card className="smooth-card">
-                    <CardContent className="p-3 text-center backdrop-blur-sm">
-                      <div className="text-lg font-bold text-green-400">{overallProgress}%</div>
-                      <div className="text-xs netflix-text-secondary whitespace-nowrap">Progresso</div>
+                    <CardContent className="p-3 md:p-4 lg:p-6 text-center backdrop-blur-sm">
+                      <div className="text-lg md:text-xl lg:text-2xl font-bold text-green-400">{overallProgress}%</div>
+                      <div className="text-xs md:text-sm lg:text-base netflix-text-secondary whitespace-nowrap">Progresso</div>
                     </CardContent>
                   </Card>
                 </div>
@@ -188,24 +190,32 @@ export default function Dashboard() {
                   onLessonSelect={handleLessonSelect}
                 />
               ) : (
-                <div className="text-center py-8">
-                  <p className="text-netflix-text-secondary text-sm">Nenhum módulo disponível no momento.</p>
+                <div className="text-center py-8 lg:py-12">
+                  <p className="text-netflix-text-secondary text-sm md:text-base lg:text-lg">Nenhum módulo disponível no momento.</p>
                 </div>
               )}
             </div>
           ) : (
-            /* Lesson View - Mobile Stack */
-            <div className="space-y-4">
-              {/* Video Player */}
-              <div className="w-full">
-                <VideoPlayer
-                  lesson={currentLesson}
-                  onComplete={() => handleLessonComplete(currentLesson)}
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 xl:gap-8 h-full">
+              <div className="flex-1 min-w-0 space-y-4">
+                <div className="w-full aspect-video bg-black rounded-lg lg:rounded-xl overflow-hidden shadow-2xl">
+                  <VideoPlayer
+                    lesson={currentLesson}
+                    onComplete={() => handleLessonComplete(currentLesson)}
+                  />
+                </div>
+              </div>
+
+              <div className="desktop-sidebar">
+                <LessonSidebar 
+                  currentLesson={currentLesson}
+                  modules={modulesList || []}
+                  progress={combinedProgress || []}
+                  onLessonSelect={handleLessonSelect}
                 />
               </div>
 
-              {/* Lesson Sidebar - Mobile Bottom */}
-              <div className="w-full">
+              <div className="lg:hidden w-full">
                 <LessonSidebar 
                   currentLesson={currentLesson}
                   modules={modulesList || []}

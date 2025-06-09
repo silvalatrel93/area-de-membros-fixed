@@ -52,29 +52,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mobile-optimized relative overflow-hidden gradient-bg">
+    <div className="device-optimized relative overflow-hidden gradient-bg">
       {/* Matrix Effect Background */}
       <MatrixEffect />
       
       {/* Light overlay to improve text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20 z-10"></div>
       
-      {/* Mobile-centered login container */}
-      <div className="relative z-20 flex-1 flex items-center justify-center py-8 px-4">
-        <div className="w-full max-w-sm">
+      {/* Responsive login container */}
+      <div className="relative z-20 flex-1 flex items-center justify-center py-8 px-4 lg:py-12">
+        <div className="w-full max-w-sm md:max-w-md lg:max-w-lg">
           <Card className="smooth-card">
-            <CardContent className="p-8">
-              {/* Logo/Brand - Mobile optimized */}
-              <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-netflix-text mb-4 animate-pulse-glow">
-                  <div className="flex items-center justify-center space-x-2 mb-3">
-                    <span className="text-netflix-red animate-pulse text-3xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
+            <CardContent className="p-6 md:p-8 lg:p-10">
+              {/* Logo/Brand - Responsive */}
+              <div className="text-center mb-6 md:mb-8 lg:mb-10">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-netflix-text mb-4 animate-pulse-glow">
+                  <div className="flex items-center justify-center space-x-2 md:space-x-3 mb-3">
+                    <span className="text-netflix-red animate-pulse text-3xl md:text-4xl lg:text-5xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
                     <TypewriterEffect 
                       text="IA Revolution"
                       speed={120}
                       delay={800}
                       cursorChar="|"
-                      className="glitch-effect text-xl whitespace-nowrap"
+                      className="glitch-effect text-xl md:text-2xl lg:text-3xl whitespace-nowrap"
                     />
                   </div>
                 </h1>

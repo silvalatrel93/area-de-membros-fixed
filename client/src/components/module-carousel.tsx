@@ -70,31 +70,101 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
   };
 
   return (
-    <div className="mb-6 sm:mb-8">
-      <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <h3 className="text-xl sm:text-2xl font-bold ml-[31px] mr-[31px] text-[#ffffff]">Módulos do Curso</h3>
-        <div className="hidden sm:flex space-x-2">
+    <div className="mb-6 lg:mb-8">
+      <div className="flex items-center justify-between mb-4 lg:mb-6">
+        <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white">Módulos do Curso</h3>
+        <div className="hidden md:flex space-x-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={scrollLeft}
-            className="p-2 bg-netflix-light-gray hover:bg-netflix-red text-netflix-text-secondary hover:text-white rounded-full"
+            className="p-2 lg:p-3 bg-netflix-light-gray hover:bg-netflix-red text-netflix-text-secondary hover:text-white rounded-full transition-all duration-300"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={20} className="lg:w-6 lg:h-6" />
           </Button>
           <Button
             variant="ghost"
             size="sm"
             onClick={scrollRight}
-            className="p-2 bg-netflix-light-gray hover:bg-netflix-red text-netflix-text-secondary hover:text-white rounded-full"
+            className="p-2 lg:p-3 bg-netflix-light-gray hover:bg-netflix-red text-netflix-text-secondary hover:text-white rounded-full transition-all duration-300"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={20} className="lg:w-6 lg:h-6" />
           </Button>
         </div>
       </div>
-      {/* Horizontal Scroll Container */}
-      <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
-        <div className="flex space-x-3 sm:space-x-4 ml-[20px] mr-[20px] pl-[0px] pr-[0px] pt-[19px] pb-[19px] mt-[8px] mb-[8px]" style={{ width: "max-content" }}>
+      
+      {/* Desktop Grid Layout */}
+      <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+        {modules.map((module, index) => {
+          const moduleProgress = getModuleProgress(module.id);
+          const isUnlocked = isModuleUnlocked(index);
+          const currentLesson = getCurrentLesson(module);
+          
+          return (
+            <Card key={module.id} className={`smooth-card overflow-hidden transition-all duration-300 hover:scale-105 ${!isUnlocked ? 'opacity-60' : ''}`}>
+              <div className="relative">
+                <img 
+                  src={module.imageUrl || '/placeholder.jpg'} 
+                  alt={module.title}
+                  className="w-full h-48 xl:h-56 object-cover"
+                />
+                <div className="absolute top-3 left-3">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${isUnlocked ? 'bg-blue-500 text-white' : 'bg-gray-500 text-gray-300'}`}>
+                    {isUnlocked ? 'DISPONÍVEL' : 'BLOQUEADO'}
+                  </span>
+                </div>
+                <div className="absolute top-3 right-3 text-white text-sm font-medium bg-black/50 px-2 py-1 rounded">
+                  {module.lessons.length} aulas
+                </div>
+              </div>
+              
+              <CardContent className="p-6">
+                <h4 className="text-lg xl:text-xl font-bold text-white mb-3 line-clamp-2">{module.title}</h4>
+                <p className="text-netflix-text-secondary text-sm mb-4 line-clamp-3">{module.description}</p>
+                
+                <div className="mb-4">
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-netflix-text-secondary">Progresso</span>
+                    <span className="text-white font-medium">{Math.round(moduleProgress)}%</span>
+                  </div>
+                  <Progress value={moduleProgress} className="h-2" />
+                </div>
+                
+                <Button 
+                  onClick={() => {
+                    if (isUnlocked && currentLesson) {
+                      const lessonWithProgress: LessonWithProgress = {
+                        ...currentLesson,
+                        progress: 0,
+                        isCompleted: false
+                      };
+                      onLessonSelect(lessonWithProgress);
+                    }
+                  }}
+                  disabled={!isUnlocked}
+                  className="w-full bg-netflix-red hover:bg-red-700 text-white font-medium py-3 transition-all duration-300"
+                >
+                  {isUnlocked ? (
+                    <>
+                      <Play size={18} className="mr-2" />
+                      Começar Módulo
+                    </>
+                  ) : (
+                    <>
+                      <Lock size={18} className="mr-2" />
+                      Módulo Bloqueado
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+      
+      {/* Mobile/Tablet Horizontal Scroll */}
+      <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide lg:hidden">
+        <div className="flex space-x-4 px-4 py-2" style={{ width: "max-content" }}>
           {modules.map((module, index) => {
             const moduleProgress = getModuleProgress(module.id);
             const isUnlocked = isModuleUnlocked(index);
