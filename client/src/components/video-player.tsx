@@ -38,7 +38,9 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
     },
     onSuccess: () => {
       console.log("Lesson marked complete successfully");
+      // Invalidate queries to refresh progress data
       queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
       onComplete();
     },
     onError: (error) => {

@@ -34,17 +34,31 @@ export default function Dashboard() {
     setLocation("/login");
   };
 
-  const handleLessonComplete = async (lesson: LessonWithProgress) => {
+  const handleLessonComplete = (lesson: LessonWithProgress) => {
+    // Update current lesson as completed
+    setCurrentLesson(prev => ({
+      ...prev,
+      isCompleted: true,
+      progress: { ...prev.progress, isCompleted: true }
+    }));
+
     const nextLesson = findNextLesson(lesson);
 
     if (nextLesson) {
-      setCurrentLesson({
-        ...nextLesson,
-        progress: 0,
-        isCompleted: false
-      });
+      // Wait a bit to show the completion state, then move to next lesson
+      setTimeout(() => {
+        setCurrentLesson({
+          ...nextLesson,
+          progress: { isCompleted: false, progressPercentage: 0 },
+          isCompleted: false
+        });
+      }, 1000);
     } else {
-      setCompletedLesson(lesson);
+      setCompletedLesson({
+        ...lesson,
+        isCompleted: true,
+        progress: { ...lesson.progress, isCompleted: true }
+      });
       setShowCompletion(true);
     }
   };
@@ -205,7 +219,7 @@ export default function Dashboard() {
                     onComplete={() => handleLessonComplete(currentLesson)}
                   />
                 </div>
-                
+
                 {/* Lesson info card - visible on all devices */}
                 <div className="w-full">
                   <Card className="smooth-card">
