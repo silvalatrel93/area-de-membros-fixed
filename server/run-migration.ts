@@ -1,6 +1,5 @@
-
 import { Pool } from '@neondatabase/serverless';
-import { readFileSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -19,17 +18,21 @@ async function runMigration() {
   }
 
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  
+
   try {
     console.log('🔄 Running database migration...');
-    
-    const migrationSQL = readFileSync(
-      join(__dirname, 'migrations', '001_initial_schema.sql'), 
-      'utf-8'
-    );
-    
-    await pool.query(migrationSQL);
-    
+
+    const migrationDir = join(__dirname, 'migrations');
+    const migrationFiles = readdirSync(migrationDir)
+      .filter(file => file.endsWith('.sql'))
+      .sort(); // Execute migrations in order
+
+    for (const file of migrationFiles) {
+      console.log(`📄 Executing ${file}...`);
+      const migrationSQL = readFileSync(join(migrationDir, file), "utf-8");
+      await pool.query(migrationSQL);
+    }
+
     console.log('✅ Migration completed successfully!');
     console.log('📊 Database tables created:');
     console.log('  - users (authentication)');
@@ -38,7 +41,7 @@ async function runMigration() {
     console.log('  - progress (user progress tracking)');
     console.log('');
     console.log('🎯 Sample data inserted for development');
-    
+
   } catch (error) {
     console.error('❌ Migration failed:', error);
     throw error;
