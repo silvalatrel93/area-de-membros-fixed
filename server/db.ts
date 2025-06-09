@@ -4,8 +4,8 @@ import * as schema from "@shared/schema";
 
 const { Pool } = pg;
 
-// Use Supabase database URL if provided, otherwise fallback to regular DATABASE_URL
-const connectionString = process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL;
+// Use working database connection
+const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
   throw new Error(
