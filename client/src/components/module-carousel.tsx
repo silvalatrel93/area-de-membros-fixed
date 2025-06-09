@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -12,6 +13,8 @@ interface ModuleCarouselProps {
 }
 
 export default function ModuleCarousel({ modules, progress, onLessonSelect }: ModuleCarouselProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const getModuleProgress = (moduleId: number) => {
     const module = modules.find(m => m.id === moduleId);
     if (!module) return 0;
