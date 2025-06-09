@@ -4,6 +4,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { authService } from "@/lib/auth";
+import { queryClient } from "@/lib/queryClient";
 import ModuleCarousel from "@/components/module-carousel";
 import VideoPlayer from "@/components/video-player";
 import LessonSidebar from "@/components/lesson-sidebar";
@@ -34,32 +35,33 @@ export default function Dashboard() {
   };
 
   const handleLessonComplete = (lesson: LessonWithProgress) => {
-    // Update current lesson as completed
-    setCurrentLesson(prev => ({
+    // Immediately update current lesson state to show completion
+    setCurrentLesson(prev => prev ? {
       ...prev,
-      isCompleted: true,
-      progress: { ...prev.progress, isCompleted: true }
-    }));
+      isCompleted: true
+    } : prev);
 
+    // Find next lesson
     const nextLesson = findNextLesson(lesson);
 
-    if (nextLesson) {
-      // Wait a bit to show the completion state, then move to next lesson
-      setTimeout(() => {
+    // Delay before proceeding to allow UI to show completion state
+    setTimeout(() => {
+      if (nextLesson) {
+        // Move to next lesson
         setCurrentLesson({
           ...nextLesson,
-          progress: { isCompleted: false, progressPercentage: 0 },
           isCompleted: false
         });
-      }, 1000);
-    } else {
-      setCompletedLesson({
-        ...lesson,
-        isCompleted: true,
-        progress: { ...lesson.progress, isCompleted: true }
-      });
-      setShowCompletion(true);
-    }
+      } else {
+        // Show completion modal for course completion
+        setCompletedLesson(lesson);
+        setShowCompletion(true);
+      }
+      
+      // Refresh progress data from server
+      queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
+    }, 1500);
   };
 
   const findNextLesson = (currentLesson: LessonWithProgress) => {
@@ -91,7 +93,6 @@ export default function Dashboard() {
       if (nextLesson) {
         setCurrentLesson({
           ...nextLesson,
-          progress: 0,
           isCompleted: false
         });
       }
