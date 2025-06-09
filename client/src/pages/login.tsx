@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/lib/auth";
 import { Play, Shield, LogIn } from "lucide-react";
+import MatrixEffect from "@/components/matrix-effect";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
@@ -50,19 +51,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-netflix-dark via-netflix-gray to-netflix-dark px-4 sm:px-6 lg:px-8">
-      {/* Background overlay with subtle pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="grid grid-cols-6 sm:grid-cols-12 gap-2 sm:gap-4 h-full p-4 sm:p-8">
-          <div className="col-span-2 sm:col-span-3 bg-gradient-to-b from-netflix-red/20 to-transparent rounded-lg"></div>
-          <div className="col-span-1 sm:col-span-2 bg-gradient-to-t from-netflix-red/10 to-transparent rounded-lg"></div>
-          <div className="col-span-2 sm:col-span-4 bg-gradient-to-r from-netflix-red/15 to-transparent rounded-lg"></div>
-          <div className="col-span-1 sm:col-span-3 bg-gradient-to-l from-netflix-red/10 to-transparent rounded-lg"></div>
-        </div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 sm:px-6 lg:px-8">
+      {/* Matrix Effect Background */}
+      <MatrixEffect />
       
-      <div className="relative z-10 w-full max-w-sm sm:max-w-md">
-        <Card className="bg-netflix-gray/80 backdrop-blur-sm border-netflix-light-gray/50">
+      {/* Dark overlay to improve readability */}
+      <div className="absolute inset-0 bg-black/30 z-10"></div>
+      
+      <div className="relative z-20 w-full max-w-sm sm:max-w-md">
+        <Card className="bg-netflix-gray/90 backdrop-blur-md border-netflix-light-gray/50 shadow-2xl shadow-netflix-red/20">
           <CardContent className="p-6 sm:p-8">
             {/* Logo/Brand */}
             <div className="text-center mb-8">
