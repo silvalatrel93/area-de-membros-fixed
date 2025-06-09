@@ -150,7 +150,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
 
   return (
     <div className="w-full">
-      <Card className="bg-netflix-gray">
+      <Card className="smooth-card">
         <CardHeader className="pb-3 sm:pb-6">
           <CardTitle className="text-base sm:text-lg font-semibold text-netflix-text">
             Aulas do Módulo
