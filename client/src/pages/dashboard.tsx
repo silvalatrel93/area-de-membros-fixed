@@ -10,7 +10,7 @@ import VideoPlayer from "@/components/video-player";
 import LessonSidebar from "@/components/lesson-sidebar";
 import LoadingOverlay from "@/components/loading-overlay";
 import CompletionModal from "@/components/completion-modal";
-import { Play, Home, Bookmark, TrendingUp, Search, Bell, LogOut } from "lucide-react";
+import { Home, Bookmark, TrendingUp, Search, Bell, LogOut } from "lucide-react";
 import type { ModuleWithLessons, LessonWithProgress } from "@shared/schema";
 
 export default function Dashboard() {
@@ -126,9 +126,9 @@ export default function Dashboard() {
               {/* Logo */}
               <div className="flex items-center">
                 <h1 className="text-lg sm:text-xl font-bold text-netflix-text">
-                  <Play className="inline text-netflix-red mr-1 sm:mr-2" size={20} />
-                  <span className="hidden xs:inline">LearnFlix</span>
-                  <span className="xs:hidden">LF</span>
+                  <span className="inline text-netflix-red mr-1 sm:mr-2 text-xl font-mono">&lt;/&gt;</span>
+                  <span className="hidden xs:inline">IA REVOLUTION</span>
+                  <span className="xs:hidden">IA REV</span>
                 </h1>
               </div>
 

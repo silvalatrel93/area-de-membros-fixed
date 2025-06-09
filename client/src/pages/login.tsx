@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/lib/auth";
-import { Play, Shield, LogIn } from "lucide-react";
+import { Shield, LogIn } from "lucide-react";
 import MatrixEffect from "@/components/matrix-effect";
 
 export default function LoginPage() {
@@ -64,8 +64,8 @@ export default function LoginPage() {
             {/* Logo/Brand */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-netflix-text mb-2 animate-pulse-glow">
-                <Play className="inline-block text-netflix-red mr-2 animate-pulse" size={32} />
-                LearnFlix
+                <span className="inline-block text-netflix-red mr-2 animate-pulse text-4xl font-mono">&lt;/&gt;</span>
+                IA REVOLUTION
               </h1>
               <p className="netflix-text-secondary text-sm">Área de membros exclusiva</p>
             </div>

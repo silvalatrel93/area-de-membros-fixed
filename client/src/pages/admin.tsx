@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/lib/auth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { insertModuleSchema, insertLessonSchema, type InsertModule, type InsertLesson, type ModuleWithLessons } from "@shared/schema";
-import { Play, Plus, Edit, Eye, Trash, Settings, Upload, Link as LinkIcon, ArrowLeft } from "lucide-react";
+import { Plus, Edit, Eye, Trash, Settings, Upload, Link as LinkIcon, ArrowLeft } from "lucide-react";
 import { Mail, CheckCircle, XCircle } from "lucide-react";
 
 export default function AdminPage() {
@@ -230,8 +230,8 @@ export default function AdminPage() {
           <div className="flex items-center justify-between h-14 sm:h-16">
             <div className="flex items-center">
               <h1 className="text-lg sm:text-xl font-bold text-netflix-text">
-                <Play className="inline text-netflix-red mr-1 sm:mr-2" size={20} />
-                <span className="hidden sm:inline">LearnFlix Admin</span>
+                <span className="inline text-netflix-red mr-1 sm:mr-2 text-xl font-mono">&lt;/&gt;</span>
+                <span className="hidden sm:inline">IA REVOLUTION Admin</span>
                 <span className="sm:hidden">Admin</span>
               </h1>
             </div>
