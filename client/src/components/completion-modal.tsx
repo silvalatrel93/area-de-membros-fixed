@@ -41,7 +41,7 @@ export default function CompletionModal({
             </p>
           </div>
 
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 ml-[83px] mr-[83px]">
             {hasNextLesson && onNextLesson && (
               <Button
                 onClick={() => {
