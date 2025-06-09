@@ -233,12 +233,10 @@ export default function Dashboard() {
                 )}
                 <Button
                   onClick={handleLogout}
-                  className="bg-netflix-red hover:bg-red-700 text-white text-xs sm:text-sm px-2 sm:px-3"
+                  className="bg-netflix-red hover:bg-red-700 text-white p-2"
                   size="sm"
                 >
-                  <LogOut className="mr-1" size={14} />
-                  <span className="hidden sm:inline">Sair</span>
-                  <span className="sm:hidden">Exit</span>
+                  <LogOut size={16} />
                 </Button>
               </div>
             </div>
