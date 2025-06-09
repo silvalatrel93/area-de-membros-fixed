@@ -67,7 +67,7 @@ export default function LoginPage() {
               <h1 className="text-3xl font-bold text-netflix-text mb-2 animate-pulse-glow">
                 <span className="inline-block text-netflix-red mr-2 animate-pulse text-4xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
                 <TypewriterEffect 
-                  text="IA REVOLUTION"
+                  text="IA Revolution"
                   speed={120}
                   delay={800}
                   cursorChar="|"

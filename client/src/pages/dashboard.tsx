@@ -193,8 +193,8 @@ export default function Dashboard() {
               <div className="flex items-center">
                 <h1 className="text-lg sm:text-xl font-bold text-netflix-text">
                   <span className="inline text-netflix-red mr-1 sm:mr-2 text-xl font-mono">&lt;/&gt;</span>
-                  <span className="hidden xs:inline">IA REVOLUTION</span>
-                  <span className="xs:hidden">IA REV</span>
+                  <span className="hidden xs:inline">IA Revolution</span>
+                  <span className="xs:hidden">IA Rev</span>
                 </h1>
               </div>
 
