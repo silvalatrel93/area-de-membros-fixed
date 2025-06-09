@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/lib/auth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { insertModuleSchema, insertLessonSchema, type InsertModule, type InsertLesson, type ModuleWithLessons } from "@shared/schema";
-import { Plus, Edit, Eye, Trash, Settings, Upload, Link as LinkIcon, ArrowLeft } from "lucide-react";
+import { Plus, Edit, Eye, Trash, Settings, ArrowLeft } from "lucide-react";
 import { Mail, CheckCircle, XCircle } from "lucide-react";
 
 export default function AdminPage() {
@@ -403,10 +403,8 @@ export default function AdminPage() {
           </Dialog>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-          {/* Modules Management */}
-          <div className="space-y-4">
-            <h3 className="text-base sm:text-lg font-medium text-netflix-text mb-4">Gerenciar Módulos</h3>
+        <div className="space-y-4">
+          <h3 className="text-base sm:text-lg font-medium text-netflix-text mb-4">Gerenciar Módulos</h3>
 
             <div className="space-y-3 sm:space-y-4">
               {modulesList.map((module) => (
@@ -564,39 +562,6 @@ export default function AdminPage() {
                 </Card>
               ))}
             </div>
-          </div>
-
-          {/* Upload Section */}
-          <div className="space-y-4">
-            <h3 className="text-base sm:text-lg font-medium text-netflix-text mb-4">Upload de Conteúdo</h3>
-
-            <Card className="bg-netflix-gray/60 border-netflix-light-gray/30 shadow-sm">
-              <CardContent className="p-4 sm:p-6">
-                {/* File Upload Area */}
-                <div className="border-2 border-dashed border-netflix-light-gray/40 rounded-lg p-4 sm:p-6 lg:p-8 text-center hover:border-netflix-red/60 transition-colors duration-200 cursor-pointer mb-4">
-                  <Upload className="mx-auto netflix-text-secondary mb-3 sm:mb-4" size={40} />
-                  <p className="text-netflix-text mb-2 text-sm sm:text-base">Clique para fazer upload ou arraste arquivos aqui</p>
-                  <p className="netflix-text-secondary text-xs sm:text-sm">Suporte para MP4, MOV, AVI (máx. 2GB)</p>
-                  <input type="file" className="hidden" accept="video/*" multiple />
-                </div>
-
-                {/* URL Input */}
-                <div>
-                  <Label className="block text-sm font-medium text-netflix-text mb-2">Ou insira URL do vídeo</Label>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <Input 
-                      type="url" 
-                      placeholder="https://vimeo.com/..." 
-                      className="flex-1 bg-netflix-light-gray/40 border-netflix-light-gray/30 text-netflix-text placeholder:netflix-text-secondary text-sm"
-                    />
-                    <Button size="sm" className="sm:px-3">
-                      <LinkIcon size={16} />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
 
               {/* Email Configuration Section */}
