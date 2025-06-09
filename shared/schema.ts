@@ -113,6 +113,10 @@ export type ModuleWithLessons = Module & {
 };
 
 export type LessonWithProgress = Lesson & {
-  progress?: Progress;
+  progress?: Progress | number;
   isCompleted?: boolean;
+};
+
+export type CombinedProgress = Omit<Progress, 'lastWatchedAt'> & {
+  lastWatchedAt: string | Date;
 };

@@ -36,26 +36,44 @@ export default function Dashboard() {
     setLocation("/login");
   };
 
-  const handleLessonComplete = (lesson: LessonWithProgress) => {
+  const handleLessonComplete = async (lesson: LessonWithProgress) => {
     console.log("Lesson completed:", lesson);
-    
-    // Adicionar a aula ao conjunto de aulas concluídas localmente
-    setLocalCompletedLessons(prev => new Set(prev).add(lesson.id));
-    
-    // Atualizar imediatamente o estado da aula atual para mostrar como concluída
-    const updatedLesson = {
-      ...lesson,
-      isCompleted: true,
-      progress: lesson.progress ? {
-        ...lesson.progress,
-        isCompleted: true,
-        progressPercentage: 100
-      } : undefined
-    };
-    
-    setCurrentLesson(updatedLesson);
-    setCompletedLesson(lesson);
-    setShowCompletion(true);
+
+    // Marcar como concluída localmente primeiro
+    setLocalCompletedLessons(prev => new Set([...prev, lesson.id]));
+
+    // Tentar marcar no servidor
+    try {
+      if (sessionId) {
+        await progressService.markLessonComplete(lesson.id, lesson.moduleId);
+        console.log("Lesson marked complete successfully");
+      }
+    } catch (error) {
+      console.error("Error marking lesson complete:", error);
+      // Manter marcação local mesmo se falhar no servidor
+    }
+
+    // Encontrar próxima aula
+    const nextLesson = findNextLesson(lesson);
+    console.log("Finding next lesson for:", lesson);
+
+    if (nextLesson) {
+      console.log("Next lesson found:", nextLesson);
+      setCurrentLesson({
+        ...nextLesson,
+        progress: 0,
+        isCompleted: false
+      });
+      console.log("Setting new current lesson:", {
+        ...nextLesson,
+        progress: 0,
+        isCompleted: false
+      });
+    } else {
+      // Última aula do curso concluída
+      setCompletedLesson(lesson);
+      setShowCompletion(true);
+    }
   };
 
   const findNextLesson = (currentLesson: LessonWithProgress) => {
@@ -123,7 +141,7 @@ export default function Dashboard() {
   const getCombinedProgress = () => {
     const serverProgress = Array.isArray(progressData) ? progressData : [];
     const combinedProgress = [...serverProgress];
-    
+
     // Adicionar aulas concluídas localmente que ainda não estão no servidor
     localCompletedLessons.forEach(lessonId => {
       const existingProgress = combinedProgress.find(p => p.lessonId === lessonId);
@@ -147,7 +165,7 @@ export default function Dashboard() {
         }
       }
     });
-    
+
     return combinedProgress;
   };
 
