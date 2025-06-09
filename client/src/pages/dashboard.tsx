@@ -37,7 +37,20 @@ export default function Dashboard() {
 
   const handleLessonComplete = (lesson: LessonWithProgress) => {
     console.log("Lesson completed:", lesson);
-    setCompletedLesson(lesson);
+    
+    // Atualizar imediatamente o estado da aula atual para mostrar como concluída
+    const updatedLesson = {
+      ...lesson,
+      isCompleted: true,
+      progress: {
+        ...lesson.progress,
+        isCompleted: true,
+        progressPercentage: 100
+      }
+    };
+    
+    setCurrentLesson(updatedLesson);
+    setCompletedLesson(updatedLesson);
     setShowCompletion(true);
   };
 
