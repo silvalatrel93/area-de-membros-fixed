@@ -36,7 +36,7 @@ export default function Dashboard() {
 
   const handleLessonComplete = async (lesson: LessonWithProgress) => {
     const nextLesson = findNextLesson(lesson);
-    
+
     if (nextLesson) {
       setCurrentLesson({
         ...nextLesson,
@@ -54,7 +54,7 @@ export default function Dashboard() {
     if (!currentModule) return null;
 
     const currentIndex = currentModule.lessons.findIndex(l => l.id === currentLesson.id);
-    
+
     if (currentIndex < currentModule.lessons.length - 1) {
       return currentModule.lessons[currentIndex + 1];
     }
@@ -157,7 +157,7 @@ export default function Dashboard() {
                 <p className="text-netflix-text-secondary text-sm mb-4">
                   Escolha um módulo para começar sua jornada.
                 </p>
-                
+
                 {/* Stats Cards */}
                 <div className="grid grid-cols-3 gap-2 mb-6">
                   <Card className="smooth-card">
@@ -203,7 +203,7 @@ export default function Dashboard() {
                   onComplete={() => handleLessonComplete(currentLesson)}
                 />
               </div>
-              
+
               {/* Lesson Sidebar - Mobile Bottom */}
               <div className="w-full">
                 <LessonSidebar 

@@ -19,7 +19,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
   const getModuleProgress = (moduleId: number) => {
     const module = modules.find(m => m.id === moduleId);
     if (!module) return 0;
-    
+
     // Convert progress data to match expected interface
     const progressData = progress.map(p => ({
       lessonId: p.lessonId,
@@ -28,13 +28,13 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
       progressPercentage: p.progressPercentage,
       lastWatchedAt: p.lastWatchedAt instanceof Date ? p.lastWatchedAt.toISOString() : p.lastWatchedAt
     }));
-    
+
     return progressService.calculateModuleProgress(module.lessons, progressData);
   };
 
   const isModuleUnlocked = (moduleIndex: number) => {
     if (moduleIndex === 0) return true;
-    
+
     const previousModule = modules[moduleIndex - 1];
     const previousProgress = getModuleProgress(previousModule.id);
     return previousProgress >= 100;
@@ -45,7 +45,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
     const incompleteLessons = module.lessons.filter(lesson => 
       !moduleProgress.some(p => p.lessonId === lesson.id && p.isCompleted)
     );
-    
+
     return incompleteLessons[0] || module.lessons[0];
   };
 
@@ -99,7 +99,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
             const moduleProgress = getModuleProgress(module.id);
             const isUnlocked = isModuleUnlocked(index);
             const currentLesson = getCurrentLesson(module);
-            
+
             return (
               <Card 
                 key={module.id}
@@ -134,10 +134,10 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
                     </span>
                     <span className="netflix-text-secondary text-sm">{module.lessons.length} aulas</span>
                   </div>
-                  
+
                   <h4 className="text-lg font-semibold text-netflix-text mb-2">{module.title}</h4>
                   <p className="netflix-text-secondary text-sm mb-4 line-clamp-2">{module.description}</p>
-                  
+
                   {/* Progress Bar */}
                   <div className="mb-4">
                     <div className="flex justify-between text-sm mb-1">
@@ -148,7 +148,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
                     </div>
                     <Progress value={moduleProgress} className="h-2" />
                   </div>
-                  
+
                   <Button 
                     onClick={() => {
                       if (isUnlocked) {
