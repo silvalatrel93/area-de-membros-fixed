@@ -103,7 +103,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteModule(id: number): Promise<boolean> {
     const result = await db.delete(modules).where(eq(modules.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   async getLessonsByModule(moduleId: number): Promise<Lesson[]> {
@@ -138,7 +138,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteLesson(id: number): Promise<boolean> {
     const result = await db.delete(lessons).where(eq(lessons.id, id));
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   async getProgress(sessionId: string): Promise<Progress[]> {
