@@ -255,7 +255,7 @@ export default function Dashboard() {
               <div className="text-center lg:text-left lg:flex lg:items-center lg:justify-between">
                 <div className="lg:flex-1">
                   <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-netflix-text mb-3 sm:mb-4">
-                    Bem-vindo de volta! 👋
+                    BEM-VINDO À ÁREA DE MEMBROS 👋
                   </h2>
                   <p className="text-base sm:text-lg netflix-text-secondary mb-4 sm:mb-6 max-w-2xl">
                     Continue sua jornada de aprendizado. Você está progredindo muito bem!
