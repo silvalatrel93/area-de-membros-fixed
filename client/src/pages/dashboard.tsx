@@ -186,7 +186,7 @@ export default function Dashboard() {
     <>
       <div className="min-h-screen">
         {/* Navigation Header */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-netflix-dark/95 backdrop-blur-sm border-b border-netflix-light-gray/30">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-red-900 via-red-800 to-red-900 backdrop-blur-sm border-b border-red-600/30 shadow-lg shadow-red-900/20">
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 sm:h-16">
               {/* Logo */}
