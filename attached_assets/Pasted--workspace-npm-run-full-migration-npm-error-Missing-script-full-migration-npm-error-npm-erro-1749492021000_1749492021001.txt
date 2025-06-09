@@ -1,0 +1,66 @@
+~/workspace$ npm run full-migration
+npm error Missing script: "full-migration"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-06-09T17_59_44_556Z-debug-0.log
+~/workspace$ npm run full-migration
+npm error Missing script: "full-migration"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-06-09T17_59_51_642Z-debug-0.log
+~/workspace$ npm run create:tables
+npm run migrate:supabase
+npm error Missing script: "create:tables"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2025-06-09T17_59_57_080Z-debug-0.log
+
+> rest-express@1.0.0 migrate:supabase
+> tsx server/migrate-to-supabase.ts
+
+🔄 Migrating data to Supabase...
+📋 Please create tables in Supabase first using the SQL Editor
+👥 Migrating users...
+Error migrating user: {}
+Error migrating user: {}
+📚 Migrating modules...
+Error migrating module: {}
+Error migrating module: {}
+Error migrating module: {}
+Error migrating module: {}
+Error migrating module: {}
+Error migrating module: {}
+Error migrating module: {}
+Error migrating module: {}
+🎥 Migrating lessons...
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+Error migrating lesson: {}
+📊 Migrating progress...
+✅ Migration completed successfully!
