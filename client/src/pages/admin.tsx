@@ -24,6 +24,13 @@ export default function AdminPage() {
   const [showLessonDialog, setShowLessonDialog] = useState(false);
   const [editingModule, setEditingModule] = useState<ModuleWithLessons | null>(null);
   const [emailStatus, setEmailStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
+  const [showNewModuleModal, setShowNewModuleModal] = useState(false);
+  const [newModule, setNewModule] = useState({
+    title: '',
+    description: '',
+    materialsUrl: ''
+  });
+  const [isCreatingModule, setIsCreatingModule] = useState(false);
 
   const { data: modules, isLoading } = useQuery({
     queryKey: ["/api/modules"],
@@ -211,6 +218,77 @@ export default function AdminPage() {
 
   const modulesList = modules as ModuleWithLessons[] || [];
 
+  const fetchModules = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/modules');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setModules(data);
+    } catch (error) {
+      console.error("Could not fetch modules:", error);
+      toast({
+        title: "Erro ao carregar módulos",
+        description: error instanceof Error ? error.message : "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const createModule = async () => {
+    if (!newModule.title.trim() || !newModule.description.trim()) {
+      toast({
+        title: "Campos obrigatórios",
+        description: "Título e descrição são obrigatórios.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCreatingModule(true);
+    try {
+      const response = await fetch('/api/modules', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newModule),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao criar módulo');
+      }
+
+      const createdModule = await response.json();
+
+      toast({
+        title: "Módulo criado com sucesso",
+        description: `O módulo "${newModule.title}" foi criado.`,
+      });
+
+      // Reset form and close modal
+      setNewModule({ title: '', description: '', materialsUrl: '' });
+      setShowNewModuleModal(false);
+
+      // Refresh modules list
+      fetchModules();
+
+    } catch (error) {
+      console.error('Erro ao criar módulo:', error);
+      toast({
+        title: "Erro ao criar módulo",
+        description: error instanceof Error ? error.message : "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreatingModule(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-netflix-dark">
@@ -269,7 +347,10 @@ export default function AdminPage() {
 
           <Dialog open={showModuleDialog} onOpenChange={handleCloseModuleDialog}>
             <DialogTrigger asChild>
-              <Button className="bg-netflix-red hover:bg-red-700 text-white">
+              <Button
+                onClick={() => setShowNewModuleModal(true)}
+                className="bg-netflix-red hover:bg-red-700 text-white"
+              >
                 <Plus className="mr-2" size={18} />
                 Novo Módulo
               </Button>
@@ -580,6 +661,94 @@ export default function AdminPage() {
                 </Card>
               </div>
       </main>
+
+      {/* New Module Modal */}
+      <Dialog open={showNewModuleModal} onOpenChange={setShowNewModuleModal}>
+        <DialogContent className="bg-netflix-gray border-netflix-light-gray max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-netflix-text">
+              Criar Novo Módulo
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="moduleTitle" className="text-netflix-text text-sm">
+                Título do Módulo *
+              </Label>
+              <Input
+                id="moduleTitle"
+                type="text"
+                placeholder="Ex: Fundamentos de JavaScript"
+                value={newModule.title}
+                onChange={(e) => setNewModule({ ...newModule, title: e.target.value })}
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="moduleDescription" className="text-netflix-text text-sm">
+                Descrição *
+              </Label>
+              <Textarea
+                id="moduleDescription"
+                placeholder="Descreva o que será aprendido neste módulo..."
+                value={newModule.description}
+                onChange={(e) => setNewModule({ ...newModule, description: e.target.value })}
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1 min-h-[80px]"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="materialsUrl" className="text-netflix-text text-sm">
+                URL dos Materiais (opcional)
+              </Label>
+              <Input
+                id="materialsUrl"
+                type="url"
+                placeholder="https://drive.google.com/..."
+                value={newModule.materialsUrl}
+                onChange={(e) => setNewModule({ ...newModule, materialsUrl: e.target.value })}
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1"
+              />
+              <p className="text-netflix-text-secondary text-xs mt-1">
+                Link para Google Drive, Dropbox ou outro serviço de armazenamento
+              </p>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <Button
+                onClick={createModule}
+                disabled={isCreatingModule}
+                className="flex-1 bg-netflix-red hover:bg-red-700 text-white"
+              >
+                {isCreatingModule ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                    Criando...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="mr-2" size={16} />
+                    Criar Módulo
+                  </>
+                )}
+              </Button>
+
+              <Button
+                onClick={() => {
+                  setNewModule({ title: '', description: '', materialsUrl: '' });
+                  setShowNewModuleModal(false);
+                }}
+                variant="ghost"
+                className="flex-1 bg-netflix-light-gray hover:bg-netflix-text-secondary text-netflix-text hover:text-netflix-dark"
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
