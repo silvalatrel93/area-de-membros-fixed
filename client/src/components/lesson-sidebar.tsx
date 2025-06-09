@@ -173,7 +173,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
                       <h6 className="font-medium text-netflix-text text-sm mb-1">{lesson.title}</h6>
                       <p className="netflix-text-secondary text-xs">{formatDuration(lesson.duration)}</p>
                     </div>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 text-[#00ff00]">
                       {status === "current" && (
                         <>
                           <Play className="text-netflix-red" size={16} />
