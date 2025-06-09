@@ -21,6 +21,7 @@ export default function AdminPage() {
   const [selectedModule, setSelectedModule] = useState<ModuleWithLessons | null>(null);
   const [showModuleDialog, setShowModuleDialog] = useState(false);
   const [showLessonDialog, setShowLessonDialog] = useState(false);
+  const [editingModule, setEditingModule] = useState<ModuleWithLessons | null>(null);
 
   const { data: modules, isLoading } = useQuery({
     queryKey: ["/api/modules"],
@@ -62,6 +63,25 @@ export default function AdminPage() {
     onError: (error) => {
       toast({ 
         title: "Erro ao criar módulo", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    },
+  });
+
+  const updateModuleMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<InsertModule> }) => 
+      apiRequest("PUT", `/api/modules/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
+      setShowModuleDialog(false);
+      setEditingModule(null);
+      moduleForm.reset();
+      toast({ title: "Módulo atualizado com sucesso!" });
+    },
+    onError: (error) => {
+      toast({ 
+        title: "Erro ao atualizar módulo", 
         description: error.message,
         variant: "destructive" 
       });
@@ -116,7 +136,30 @@ export default function AdminPage() {
   });
 
   const handleCreateModule = (data: InsertModule) => {
-    createModuleMutation.mutate(data);
+    if (editingModule) {
+      updateModuleMutation.mutate({ id: editingModule.id, data });
+    } else {
+      createModuleMutation.mutate(data);
+    }
+  };
+
+  const handleEditModule = (module: ModuleWithLessons) => {
+    setEditingModule(module);
+    moduleForm.reset({
+      title: module.title,
+      description: module.description || "",
+      imageUrl: module.imageUrl || "",
+      materialsUrl: module.materialsUrl || "",
+      orderIndex: module.orderIndex,
+      isActive: module.isActive,
+    });
+    setShowModuleDialog(true);
+  };
+
+  const handleCloseModuleDialog = () => {
+    setShowModuleDialog(false);
+    setEditingModule(null);
+    moduleForm.reset();
   };
 
   const handleCreateLesson = (data: InsertLesson) => {
@@ -185,7 +228,7 @@ export default function AdminPage() {
             Painel Administrativo
           </h2>
           
-          <Dialog open={showModuleDialog} onOpenChange={setShowModuleDialog}>
+          <Dialog open={showModuleDialog} onOpenChange={handleCloseModuleDialog}>
             <DialogTrigger asChild>
               <Button className="bg-netflix-red hover:bg-red-700 text-white">
                 <Plus className="mr-2" size={18} />
@@ -194,7 +237,9 @@ export default function AdminPage() {
             </DialogTrigger>
             <DialogContent className="bg-netflix-gray border-netflix-light-gray">
               <DialogHeader>
-                <DialogTitle className="text-netflix-text">Criar Novo Módulo</DialogTitle>
+                <DialogTitle className="text-netflix-text">
+                  {editingModule ? "Editar Módulo" : "Criar Novo Módulo"}
+                </DialogTitle>
               </DialogHeader>
               <form onSubmit={moduleForm.handleSubmit(handleCreateModule)} className="space-y-4">
                 <div>
@@ -246,10 +291,13 @@ export default function AdminPage() {
                 </div>
                 <Button 
                   type="submit" 
-                  disabled={createModuleMutation.isPending}
+                  disabled={createModuleMutation.isPending || updateModuleMutation.isPending}
                   className="w-full bg-netflix-red hover:bg-red-700"
                 >
-                  {createModuleMutation.isPending ? "Criando..." : "Criar Módulo"}
+                  {createModuleMutation.isPending || updateModuleMutation.isPending 
+                    ? (editingModule ? "Atualizando..." : "Criando...") 
+                    : (editingModule ? "Atualizar Módulo" : "Criar Módulo")
+                  }
                 </Button>
               </form>
             </DialogContent>
@@ -271,7 +319,7 @@ export default function AdminPage() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => setSelectedModule(module)}
+                          onClick={() => handleEditModule(module)}
                           className="text-blue-400 hover:text-blue-300 hover:bg-blue-400/10"
                         >
                           <Edit size={16} />
@@ -279,6 +327,7 @@ export default function AdminPage() {
                         <Button
                           size="sm"
                           variant="ghost"
+                          onClick={() => setSelectedModule(selectedModule?.id === module.id ? null : module)}
                           className="text-green-400 hover:text-green-300 hover:bg-green-400/10"
                         >
                           <Eye size={16} />
