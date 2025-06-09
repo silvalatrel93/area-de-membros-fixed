@@ -15,7 +15,7 @@ interface LessonSidebarProps {
 export default function LessonSidebar({ currentLesson, modules, progress, onLessonSelect }: LessonSidebarProps) {
   const { toast } = useToast();
   const currentModule = modules.find(m => m.id === currentLesson.moduleId);
-  
+
   if (!currentModule) return null;
 
   const getLessonStatus = (lessonId: number) => {
@@ -82,7 +82,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
           <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
             {currentModule.lessons.map((lesson) => {
               const status = getLessonStatus(lesson.id);
-              
+
               return (
                 <div
                   key={lesson.id}
@@ -125,30 +125,76 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
               );
             })}
           </div>
-          
+
           {/* Module Actions */}
           <div className="space-y-2 sm:space-y-3">
             <Button 
-              variant="ghost"
-              onClick={handleDownloadMaterials}
+              onClick={() => {
+                if (currentModule.materialsUrl) {
+                  const materialsType = getMaterialsType(currentModule.materialsUrl);
+
+                  if (materialsType === 'folder') {
+                    window.open(currentModule.materialsUrl, '_blank');
+                    toast({
+                      title: "Materiais abertos",
+                      description: "Os materiais foram abertos em uma nova aba.",
+                    });
+                  } else {
+                    try {
+                      const downloadUrl = convertGoogleDriveDownloadUrl(currentModule.materialsUrl);
+
+                      // Criar elemento temporário para download
+                      const link = document.createElement('a');
+                      link.href = downloadUrl;
+                      link.download = `materiais_${currentModule.title.replace(/\s+/g, '_').toLowerCase()}.pdf`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+
+                      toast({
+                        title: "Download iniciado",
+                        description: "O download dos materiais foi iniciado.",
+                      });
+                    } catch (error) {
+                      // Fallback: abrir em nova aba
+                      window.open(currentModule.materialsUrl, '_blank');
+                      toast({
+                        title: "Materiais abertos",
+                        description: "Os materiais foram abertos em uma nova aba.",
+                      });
+                    }
+                  }
+                } else {
+                  toast({
+                    title: "Materiais não disponíveis",
+                    description: "Este módulo não possui materiais para download.",
+                    variant: "destructive",
+                  });
+                }
+              }}
               disabled={!currentModule.materialsUrl}
-              className={`w-full py-2 px-4 rounded-lg transition-all duration-200 text-sm font-medium ${
+              className={`w-full py-3 px-4 rounded-lg transition-all duration-300 text-sm font-medium flex items-center justify-center space-x-2 ${
                 currentModule.materialsUrl 
-                  ? "bg-netflix-light-gray hover:bg-netflix-red text-netflix-text hover:text-white" 
-                  : "bg-netflix-light-gray/50 text-netflix-text/50 cursor-not-allowed"
+                  ? "bg-gradient-to-r from-netflix-red to-red-700 hover:from-red-700 hover:to-netflix-red text-white shadow-lg hover:shadow-xl transform hover:scale-105" 
+                  : "bg-netflix-light-gray/30 text-netflix-text/40 cursor-not-allowed"
               }`}
             >
               {getMaterialsType(currentModule.materialsUrl || '') === 'folder' ? (
-                <FolderOpen className="mr-2" size={16} />
+                <FolderOpen className="mr-2" size={18} />
               ) : (
-                <Download className="mr-2" size={16} />
+                <Download className="mr-2" size={18} />
               )}
-              {currentModule.materialsUrl ? (
-                getMaterialsType(currentModule.materialsUrl) === 'folder' 
-                  ? "Abrir Materiais" 
-                  : "Download Materiais"
-              ) : (
-                "Sem Materiais"
+              <span>
+                {currentModule.materialsUrl ? (
+                  getMaterialsType(currentModule.materialsUrl) === 'folder' 
+                    ? "Abrir Materiais" 
+                    : "Baixar Materiais"
+                ) : (
+                  "Materiais Indisponíveis"
+                )}
+              </span>
+              {currentModule.materialsUrl && (
+                <ExternalLink className="ml-1" size={14} />
               )}
             </Button>
             <Button 
