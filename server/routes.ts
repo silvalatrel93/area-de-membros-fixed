@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { loginSchema, insertModuleSchema, insertLessonSchema, insertProgressSchema } from "@shared/schema";
 import { z } from "zod";
+import { emailService, type SupportRequest } from "./email-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
@@ -220,6 +221,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(progress);
     } catch (error) {
       res.status(400).json({ message: "Erro ao marcar aula como concluída", error });
+    }
+  });
+
+  // Support routes
+  app.post("/api/support/request", async (req, res) => {
+    try {
+      const supportSchema = z.object({
+        userEmail: z.string().email().optional(),
+        lessonId: z.number(),
+        moduleId: z.number(),
+        message: z.string().min(10, "Mensagem deve ter pelo menos 10 caracteres"),
+        sessionId: z.string()
+      });
+
+      const { userEmail, lessonId, moduleId, message, sessionId } = supportSchema.parse(req.body);
+
+      // Buscar informações da aula e módulo
+      const lesson = await storage.getLesson(lessonId);
+      const module = await storage.getModule(moduleId);
+
+      if (!lesson || !module) {
+        return res.status(404).json({ message: "Aula ou módulo não encontrado" });
+      }
+
+      const supportRequest: SupportRequest = {
+        userEmail,
+        lessonTitle: lesson.title,
+        moduleTitle: module.title,
+        message,
+        timestamp: new Date(),
+        sessionId
+      };
+
+      const emailSent = await emailService.sendSupportRequest(supportRequest);
+
+      if (!emailSent) {
+        return res.status(500).json({ 
+          message: "Erro ao enviar solicitação de suporte. Tente novamente mais tarde." 
+        });
+      }
+
+      res.json({ 
+        success: true, 
+        message: "Solicitação de suporte enviada com sucesso!" 
+      });
+    } catch (error) {
+      console.error("Erro na solicitação de suporte:", error);
+      res.status(400).json({ 
+        message: "Erro ao processar solicitação de suporte", 
+        error: error instanceof Error ? error.message : error 
+      });
+    }
+  });
+
+  app.get("/api/support/test-email", async (req, res) => {
+    try {
+      const isConnected = await emailService.testConnection();
+      res.json({ 
+        connected: isConnected,
+        message: isConnected ? "Conexão com email funcionando" : "Erro na conexão com email"
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao testar conexão de email", error });
     }
   });
 

@@ -90,18 +90,50 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
 
     setIsSubmittingSupport(true);
 
-    // Simulate an API call
-    setTimeout(() => {
-      setIsSubmittingSupport(false);
+    try {
+      const sessionId = localStorage.getItem('sessionId');
+      
+      const response = await fetch('/api/support/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userEmail: supportEmail || undefined,
+          lessonId: currentLesson.id,
+          moduleId: currentLesson.moduleId,
+          message: supportMessage,
+          sessionId: sessionId
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Erro ao enviar solicitação');
+      }
+
       setShowSupportModal(false);
       setSupportMessage("");
       setSupportEmail("");
 
       toast({
-        title: "Dúvida enviada!",
-        description: "Sua dúvida foi enviada com sucesso. Nossa equipe responderá em breve.",
+        title: "Dúvida enviada com sucesso!",
+        description: supportEmail 
+          ? "Você receberá uma confirmação por email e nossa equipe responderá em breve."
+          : "Nossa equipe analisará sua dúvida e responderá em breve.",
       });
-    }, 1500);
+
+    } catch (error) {
+      console.error('Erro ao enviar suporte:', error);
+      toast({
+        title: "Erro ao enviar dúvida",
+        description: error instanceof Error ? error.message : "Tente novamente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingSupport(false);
+    }
   };
 
   return (

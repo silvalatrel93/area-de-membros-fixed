@@ -14,6 +14,7 @@ import { authService } from "@/lib/auth";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { insertModuleSchema, insertLessonSchema, type InsertModule, type InsertLesson, type ModuleWithLessons } from "@shared/schema";
 import { Play, Plus, Edit, Eye, Trash, Settings, Upload, Link as LinkIcon, ArrowLeft } from "lucide-react";
+import { Mail, CheckCircle, XCircle } from "lucide-react";
 
 export default function AdminPage() {
   const [, setLocation] = useLocation();
@@ -22,6 +23,7 @@ export default function AdminPage() {
   const [showModuleDialog, setShowModuleDialog] = useState(false);
   const [showLessonDialog, setShowLessonDialog] = useState(false);
   const [editingModule, setEditingModule] = useState<ModuleWithLessons | null>(null);
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'testing' | 'success' | 'error'>('idle');
 
   const { data: modules, isLoading } = useQuery({
     queryKey: ["/api/modules"],
@@ -170,6 +172,43 @@ export default function AdminPage() {
     });
   };
 
+  const testEmailConnection = async () => {
+    setEmailStatus('testing');
+    try {
+      const response = await fetch('/api/support/test-email');
+      const result = await response.json();
+
+      if (result.connected) {
+        setEmailStatus('success');
+        toast({
+          title: "Conexão de email funcionando",
+          description: "O serviço de email está configurado corretamente.",
+        });
+      } else {
+        setEmailStatus('error');
+        toast({
+          title: "Erro na conexão de email",
+          description: "Verifique as configurações de email no arquivo .env",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      setEmailStatus('error');
+      toast({
+        title: "Erro ao testar email",
+        description: "Não foi possível testar a conexão de email.",
+        variant: "destructive",
+      });
+    }
+
+    // Reset status after 3 seconds
+    setTimeout(() => setEmailStatus('idle'), 3000);
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+  };
+
   const modulesList = modules as ModuleWithLessons[] || [];
 
   if (isLoading) {
@@ -196,7 +235,7 @@ export default function AdminPage() {
                 <span className="sm:hidden">Admin</span>
               </h1>
             </div>
-            
+
             <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 onClick={() => setLocation("/dashboard")}
@@ -227,7 +266,7 @@ export default function AdminPage() {
             <Settings className="inline text-netflix-red mr-2" size={28} />
             Painel Administrativo
           </h2>
-          
+
           <Dialog open={showModuleDialog} onOpenChange={handleCloseModuleDialog}>
             <DialogTrigger asChild>
               <Button className="bg-netflix-red hover:bg-red-700 text-white">
@@ -303,12 +342,12 @@ export default function AdminPage() {
             </DialogContent>
           </Dialog>
         </div>
-        
+
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Modules Management */}
           <div>
             <h3 className="text-lg font-semibold text-netflix-text mb-4">Gerenciar Módulos</h3>
-            
+
             <div className="space-y-4">
               {modulesList.map((module) => (
                 <Card key={module.id} className="bg-netflix-gray border-netflix-light-gray">
@@ -362,7 +401,7 @@ export default function AdminPage() {
                         </span>
                       )}
                     </div>
-                    
+
                     {selectedModule?.id === module.id && (
                       <div className="mt-4 pt-4 border-t border-netflix-light-gray/30">
                         <div className="flex items-center justify-between mb-2">
@@ -438,7 +477,7 @@ export default function AdminPage() {
                             </DialogContent>
                           </Dialog>
                         </div>
-                        
+
                         <div className="space-y-2">
                           {module.lessons.map((lesson) => (
                             <div key={lesson.id} className="flex items-center justify-between p-2 bg-netflix-light-gray/30 rounded">
@@ -466,11 +505,11 @@ export default function AdminPage() {
               ))}
             </div>
           </div>
-          
+
           {/* Upload Section */}
           <div>
             <h3 className="text-lg font-semibold text-netflix-text mb-4">Upload de Conteúdo</h3>
-            
+
             <Card className="bg-netflix-gray border-netflix-light-gray">
               <CardContent className="p-6">
                 {/* File Upload Area */}
@@ -480,7 +519,7 @@ export default function AdminPage() {
                   <p className="netflix-text-secondary text-sm">Suporte para MP4, MOV, AVI (máx. 2GB)</p>
                   <input type="file" className="hidden" accept="video/*" multiple />
                 </div>
-                
+
                 {/* URL Input */}
                 <div>
                   <Label className="block text-sm font-medium text-netflix-text mb-2">Ou insira URL do vídeo</Label>
@@ -499,6 +538,47 @@ export default function AdminPage() {
             </Card>
           </div>
         </div>
+
+              {/* Email Configuration Section */}
+              <div>
+                <h3 className="text-lg font-semibold text-netflix-text mb-4">Configurações de Email</h3>
+                <Card className="bg-netflix-gray border-netflix-light-gray">
+                  <CardContent className="p-6">
+                    <p className="text-netflix-text">Configure as settings do serviço de email para enviar notificações e suporte.</p>
+                    <Button
+                      onClick={testEmailConnection}
+                      disabled={emailStatus === 'testing'}
+                      variant="outline"
+                      className={`mt-4 text-netflix-text hover:bg-blue-500/20 ${
+                        emailStatus === 'success' ? 'bg-green-500/20' :
+                        emailStatus === 'error' ? 'bg-red-500/20' : ''
+                      }`}
+                    >
+                      {emailStatus === 'testing' ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-netflix-text/30 border-t-netflix-text rounded-full animate-spin mr-2" />
+                          Testando...
+                        </>
+                      ) : emailStatus === 'success' ? (
+                        <>
+                          <CheckCircle className="mr-2 text-green-400" size={16} />
+                          Email OK
+                        </>
+                      ) : emailStatus === 'error' ? (
+                        <>
+                          <XCircle className="mr-2 text-red-400" size={16} />
+                          Email Erro
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="mr-2" size={16} />
+                          Testar Email
+                        </>
+                      )}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
       </main>
     </div>
   );
