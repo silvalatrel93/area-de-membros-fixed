@@ -304,10 +304,7 @@ export default function AdminPage() {
                 <ArrowLeft size={16} />
               </Button>
               <Button
-                onClick={() => {
-                  authService.logout();
-                  setLocation("/login");
-                }}
+                onClick={() => authService.logout()}
                 size="sm"
                 className="text-xs sm:text-sm bg-netflix-red/80 hover:bg-netflix-red/90"
               >

@@ -31,7 +31,6 @@ export default function Dashboard() {
 
   const handleLogout = () => {
     authService.logout();
-    setLocation("/login");
   };
 
   const handleLessonComplete = (lesson: LessonWithProgress) => {
