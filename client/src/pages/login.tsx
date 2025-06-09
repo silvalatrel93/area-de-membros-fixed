@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { authService } from "@/lib/auth";
 import { Shield, LogIn } from "lucide-react";
 import MatrixEffect from "@/components/matrix-effect";
+import TypewriterEffect from "@/components/typewriter-effect";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
@@ -64,8 +65,14 @@ export default function LoginPage() {
             {/* Logo/Brand */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-netflix-text mb-2 animate-pulse-glow">
-                <span className="inline-block text-netflix-red mr-2 animate-pulse text-4xl font-mono">&lt;/&gt;</span>
-                IA REVOLUTION
+                <span className="inline-block text-netflix-red mr-2 animate-pulse text-4xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
+                <TypewriterEffect 
+                  text="IA REVOLUTION"
+                  speed={120}
+                  delay={800}
+                  cursorChar="|"
+                  className="inline-block glitch-effect"
+                />
               </h1>
               <p className="netflix-text-secondary text-sm">Área de membros exclusiva</p>
             </div>
