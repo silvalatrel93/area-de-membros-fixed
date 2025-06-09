@@ -13,8 +13,8 @@ interface ModuleCarouselProps {
 }
 
 export default function ModuleCarousel({ modules, progress, onLessonSelect }: ModuleCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   const getModuleProgress = (moduleId: number) => {
     const module = modules.find(m => m.id === moduleId);
     if (!module) return 0;
@@ -48,6 +48,26 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
     return incompleteLessons[0] || module.lessons[0];
   };
 
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      const cardWidth = 320; // Largura do card + espaçamento
+      scrollContainerRef.current.scrollBy({ 
+        left: -cardWidth, 
+        behavior: 'smooth' 
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      const cardWidth = 320;
+      scrollContainerRef.current.scrollBy({ 
+        left: cardWidth, 
+        behavior: 'smooth' 
+      });
+    }
+  };
+
   return (
     <div className="mb-6 sm:mb-8">
       <div className="flex items-center justify-between mb-4 sm:mb-6">
@@ -56,6 +76,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
           <Button
             variant="ghost"
             size="sm"
+            onClick={scrollLeft}
             className="p-2 bg-netflix-light-gray hover:bg-netflix-red text-netflix-text-secondary hover:text-white rounded-full"
           >
             <ChevronLeft size={20} />
@@ -63,6 +84,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
           <Button
             variant="ghost"
             size="sm"
+            onClick={scrollRight}
             className="p-2 bg-netflix-light-gray hover:bg-netflix-red text-netflix-text-secondary hover:text-white rounded-full"
           >
             <ChevronRight size={20} />
@@ -71,7 +93,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
       </div>
       
       {/* Horizontal Scroll Container */}
-      <div className="overflow-x-auto scrollbar-hide">
+      <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
         <div className="flex space-x-3 sm:space-x-4 pb-4" style={{ width: "max-content" }}>
           {modules.map((module, index) => {
             const moduleProgress = getModuleProgress(module.id);
