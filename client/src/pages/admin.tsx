@@ -280,32 +280,32 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-netflix-dark">
       {/* Navigation Header */}
-      <nav className="bg-netflix-dark/95 backdrop-blur-sm border-b border-netflix-light-gray/30">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16">
+      <nav className="bg-netflix-dark/90 backdrop-blur-sm border-b border-netflix-light-gray/20">
+        <div className="responsive-container">
+          <div className="flex items-center justify-between h-12 sm:h-14 lg:h-16">
             <div className="flex items-center">
-              <h1 className="text-lg sm:text-xl font-bold text-netflix-text">
-                <span className="inline text-netflix-red mr-1 sm:mr-2 text-xl font-mono">&lt;/&gt;</span>
+              <h1 className="text-sm sm:text-lg lg:text-xl font-semibold text-netflix-text">
+                <span className="inline text-netflix-red mr-1 sm:mr-2 text-lg sm:text-xl font-mono">&lt;/&gt;</span>
                 <span className="hidden sm:inline">IA REVOLUTION Admin</span>
                 <span className="sm:hidden">Admin</span>
               </h1>
             </div>
 
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <Button
                 onClick={() => setLocation("/dashboard")}
                 variant="outline"
                 size="sm"
-                className="border-netflix-text-secondary text-netflix-text-secondary hover:bg-netflix-text-secondary hover:text-netflix-dark text-xs sm:text-sm px-2 sm:px-3"
+                className="text-xs sm:text-sm"
               >
-                <ArrowLeft className="mr-1" size={14} />
+                <ArrowLeft className="mr-1 sm:mr-2" size={16} />
                 <span className="hidden sm:inline">Voltar</span>
                 <span className="sm:hidden">←</span>
               </Button>
               <Button
                 onClick={() => authService.logout()}
-                className="bg-netflix-red hover:bg-red-700 text-white text-xs sm:text-sm px-2 sm:px-3"
                 size="sm"
+                className="text-xs sm:text-sm"
               >
                 Sair
               </Button>
@@ -315,20 +315,22 @@ export default function AdminPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-netflix-text">
-            <Settings className="inline text-netflix-red mr-2" size={28} />
-            Painel Administrativo
+      <main className="responsive-container py-4 sm:py-6 lg:py-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-netflix-text">
+            <Settings className="inline text-netflix-red mr-2" size={24} />
+            <span className="hidden sm:inline">Painel Administrativo</span>
+            <span className="sm:hidden">Admin</span>
           </h2>
 
           <Dialog open={showModuleDialog} onOpenChange={handleCloseModuleDialog}>
             <DialogTrigger asChild>
               <Button
                 onClick={() => setShowNewModuleModal(true)}
-                className="bg-netflix-red hover:bg-red-700 text-white"
+                size="sm"
+                className="w-full sm:w-auto"
               >
-                <Plus className="mr-2" size={18} />
+                <Plus className="mr-2" size={16} />
                 Novo Módulo
               </Button>
             </DialogTrigger>
@@ -401,60 +403,60 @@ export default function AdminPage() {
           </Dialog>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Modules Management */}
-          <div>
-            <h3 className="text-lg font-semibold text-netflix-text mb-4">Gerenciar Módulos</h3>
+          <div className="space-y-4">
+            <h3 className="text-base sm:text-lg font-medium text-netflix-text mb-4">Gerenciar Módulos</h3>
 
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {modulesList.map((module) => (
-                <Card key={module.id} className="bg-netflix-gray border-netflix-light-gray">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium text-netflix-text">{module.title}</h4>
-                      <div className="flex space-x-2">
+                <Card key={module.id} className="bg-netflix-gray/60 border-netflix-light-gray/30 shadow-sm">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
+                      <h4 className="font-medium text-netflix-text text-sm sm:text-base line-clamp-2">{module.title}</h4>
+                      <div className="flex space-x-1 sm:space-x-2 shrink-0">
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => handleEditModule(module)}
-                          className="text-blue-400 hover:text-blue-300 hover:bg-blue-400/10"
+                          className="text-netflix-text-secondary hover:text-netflix-text hover:bg-netflix-light-gray/20 p-1 sm:p-2"
                         >
-                          <Edit size={16} />
+                          <Edit size={14} />
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => setSelectedModule(selectedModule?.id === module.id ? null : module)}
-                          className="text-green-400 hover:text-green-300 hover:bg-green-400/10"
+                          className="text-netflix-text-secondary hover:text-netflix-text hover:bg-netflix-light-gray/20 p-1 sm:p-2"
                         >
-                          <Eye size={16} />
+                          <Eye size={14} />
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
                           onClick={() => deleteModuleMutation.mutate(module.id)}
-                          className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                          className="text-netflix-text-secondary hover:text-netflix-red hover:bg-red-500/10 p-1 sm:p-2"
                         >
-                          <Trash size={16} />
+                          <Trash size={14} />
                         </Button>
                       </div>
                     </div>
-                    <p className="netflix-text-secondary text-sm mb-2">
+                    <p className="netflix-text-secondary text-xs sm:text-sm mb-3">
                       {module.lessons.length} aulas • Status: {module.isActive ? "Ativo" : "Inativo"}
                     </p>
-                    <div className="flex space-x-2">
+                    <div className="flex flex-wrap gap-1 sm:gap-2">
                       <span className={`px-2 py-1 rounded text-xs ${
                         module.isActive 
-                          ? "bg-green-500/20 text-green-400" 
-                          : "bg-yellow-500/20 text-yellow-400"
+                          ? "bg-green-500/15 text-green-400" 
+                          : "bg-yellow-500/15 text-yellow-400"
                       }`}>
                         {module.isActive ? "Publicado" : "Rascunho"}
                       </span>
-                      <span className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">
+                      <span className="bg-blue-500/15 text-blue-400 px-2 py-1 rounded text-xs">
                         {module.lessons.length} Vídeos
                       </span>
                       {module.materialsUrl && (
-                        <span className="bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-xs">
+                        <span className="bg-purple-500/15 text-purple-400 px-2 py-1 rounded text-xs">
                           Materiais
                         </span>
                       )}
@@ -565,30 +567,30 @@ export default function AdminPage() {
           </div>
 
           {/* Upload Section */}
-          <div>
-            <h3 className="text-lg font-semibold text-netflix-text mb-4">Upload de Conteúdo</h3>
+          <div className="space-y-4">
+            <h3 className="text-base sm:text-lg font-medium text-netflix-text mb-4">Upload de Conteúdo</h3>
 
-            <Card className="bg-netflix-gray border-netflix-light-gray">
-              <CardContent className="p-6">
+            <Card className="bg-netflix-gray/60 border-netflix-light-gray/30 shadow-sm">
+              <CardContent className="p-4 sm:p-6">
                 {/* File Upload Area */}
-                <div className="border-2 border-dashed border-netflix-light-gray rounded-lg p-8 text-center hover:border-netflix-red transition-colors duration-200 cursor-pointer mb-4">
-                  <Upload className="mx-auto netflix-text-secondary mb-4" size={48} />
-                  <p className="text-netflix-text mb-2">Clique para fazer upload ou arraste arquivos aqui</p>
-                  <p className="netflix-text-secondary text-sm">Suporte para MP4, MOV, AVI (máx. 2GB)</p>
+                <div className="border-2 border-dashed border-netflix-light-gray/40 rounded-lg p-4 sm:p-6 lg:p-8 text-center hover:border-netflix-red/60 transition-colors duration-200 cursor-pointer mb-4">
+                  <Upload className="mx-auto netflix-text-secondary mb-3 sm:mb-4" size={40} />
+                  <p className="text-netflix-text mb-2 text-sm sm:text-base">Clique para fazer upload ou arraste arquivos aqui</p>
+                  <p className="netflix-text-secondary text-xs sm:text-sm">Suporte para MP4, MOV, AVI (máx. 2GB)</p>
                   <input type="file" className="hidden" accept="video/*" multiple />
                 </div>
 
                 {/* URL Input */}
                 <div>
                   <Label className="block text-sm font-medium text-netflix-text mb-2">Ou insira URL do vídeo</Label>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input 
                       type="url" 
                       placeholder="https://vimeo.com/..." 
-                      className="flex-1 bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text placeholder:netflix-text-secondary"
+                      className="flex-1 bg-netflix-light-gray/40 border-netflix-light-gray/30 text-netflix-text placeholder:netflix-text-secondary text-sm"
                     />
-                    <Button className="bg-netflix-red hover:bg-red-700">
-                      <LinkIcon size={18} />
+                    <Button size="sm" className="sm:px-3">
+                      <LinkIcon size={16} />
                     </Button>
                   </div>
                 </div>
