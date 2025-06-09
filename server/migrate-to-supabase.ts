@@ -93,8 +93,10 @@ async function migrateToSupabase() {
         .insert({
           session_id: prog.sessionId,
           lesson_id: prog.lessonId,
-          completed_at: prog.completedAt,
-          progress_percentage: prog.progressPercentage
+          module_id: prog.moduleId,
+          is_completed: prog.isCompleted,
+          progress_percentage: prog.progressPercentage,
+          last_watched_at: prog.lastWatchedAt
         });
       
       if (error) {
