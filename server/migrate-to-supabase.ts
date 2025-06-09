@@ -1,4 +1,3 @@
-
 import { config } from 'dotenv';
 config(); // Carregar variáveis de ambiente
 
@@ -12,11 +11,11 @@ async function migrateToSupabase() {
 
     // 1. Criar tabelas no Supabase (você precisa fazer isso no SQL Editor do Supabase)
     console.log('📋 Please create tables in Supabase first using the SQL Editor');
-    
+
     // 2. Migrar usuários
     console.log('👥 Migrating users...');
     const currentUsers = await db.select().from(users);
-    
+
     for (const user of currentUsers) {
       const { data, error } = await supabaseAdmin
         .from('users')
@@ -26,7 +25,7 @@ async function migrateToSupabase() {
           is_admin: user.isAdmin,
           created_at: user.createdAt
         });
-      
+
       if (error) {
         console.error('Error migrating user:', error);
       } else {
@@ -37,7 +36,7 @@ async function migrateToSupabase() {
     // 3. Migrar módulos
     console.log('📚 Migrating modules...');
     const currentModules = await db.select().from(modules);
-    
+
     for (const module of currentModules) {
       const { data, error } = await supabaseAdmin
         .from('modules')
@@ -50,7 +49,7 @@ async function migrateToSupabase() {
           is_active: module.isActive,
           created_at: module.createdAt
         });
-      
+
       if (error) {
         console.error('Error migrating module:', error);
       } else {
@@ -61,7 +60,7 @@ async function migrateToSupabase() {
     // 4. Migrar lições
     console.log('🎥 Migrating lessons...');
     const currentLessons = await db.select().from(lessons);
-    
+
     for (const lesson of currentLessons) {
       const { data, error } = await supabaseAdmin
         .from('lessons')
@@ -75,7 +74,7 @@ async function migrateToSupabase() {
           is_active: lesson.isActive,
           created_at: lesson.createdAt
         });
-      
+
       if (error) {
         console.error('Error migrating lesson:', error);
       } else {
@@ -86,7 +85,7 @@ async function migrateToSupabase() {
     // 5. Migrar progresso
     console.log('📊 Migrating progress...');
     const currentProgress = await db.select().from(progress);
-    
+
     for (const prog of currentProgress) {
       const { data, error } = await supabaseAdmin
         .from('progress')
@@ -98,7 +97,7 @@ async function migrateToSupabase() {
           progress_percentage: prog.progressPercentage,
           last_watched_at: prog.lastWatchedAt
         });
-      
+
       if (error) {
         console.error('Error migrating progress:', error);
       } else {
@@ -107,7 +106,7 @@ async function migrateToSupabase() {
     }
 
     console.log('✅ Migration completed successfully!');
-    
+
   } catch (error) {
     console.error('❌ Migration failed:', error);
   }

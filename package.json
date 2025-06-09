@@ -9,6 +9,8 @@
     "start": "NODE_ENV=production node dist/index.js",
     "migrate": "tsx server/run-migration.ts",
     "migrate:supabase": "tsx server/migrate-to-supabase.ts",
+    "create:tables": "tsx server/create-supabase-tables.ts",
+    "full-migration": "npm run create:tables && npm run migrate:supabase",
     "db:check": "tsx server/check-db.ts",
     "db:reset": "tsx server/run-migration.ts"
   },
