@@ -92,10 +92,9 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
           </Button>
         </div>
       </div>
-      
       {/* Horizontal Scroll Container */}
       <div ref={scrollContainerRef} className="overflow-x-auto scrollbar-hide">
-        <div className="flex space-x-3 sm:space-x-4 pb-4" style={{ width: "max-content" }}>
+        <div className="flex space-x-3 sm:space-x-4 ml-[20px] mr-[20px] pl-[0px] pr-[0px] pt-[19px] pb-[19px] mt-[8px] mb-[8px]" style={{ width: "max-content" }}>
           {modules.map((module, index) => {
             const moduleProgress = getModuleProgress(module.id);
             const isUnlocked = isModuleUnlocked(index);
