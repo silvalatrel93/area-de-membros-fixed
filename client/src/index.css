@@ -78,7 +78,7 @@
 }
 
 .desktop-sidebar {
-  @apply hidden lg:block w-80 xl:w-96;
+  @apply w-80 xl:w-96 flex-shrink-0;
 }
 
 .main-content-area {
