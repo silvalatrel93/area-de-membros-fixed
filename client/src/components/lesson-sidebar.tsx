@@ -30,7 +30,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
   };
 
   return (
-    <div className="lg:col-span-1">
+    <div className="w-full">
       <Card className="bg-netflix-gray">
         <CardHeader className="pb-3 sm:pb-6">
           <CardTitle className="text-base sm:text-lg font-semibold text-netflix-text">
@@ -39,7 +39,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
         </CardHeader>
         <CardContent className="p-3 sm:p-6">
           {/* Lessons List */}
-          <div className="space-y-3 mb-6">
+          <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
             {currentModule.lessons.map((lesson) => {
               const status = getLessonStatus(lesson.id);
               
@@ -47,7 +47,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
                 <div
                   key={lesson.id}
                   onClick={() => onLessonSelect(lesson)}
-                  className={`rounded-lg p-4 cursor-pointer transition-colors duration-200 border ${
+                  className={`rounded-lg p-3 sm:p-4 cursor-pointer transition-colors duration-200 border ${
                     status === "current" 
                       ? "bg-netflix-red/20 border-netflix-red/30"
                       : status === "completed"
@@ -87,7 +87,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
           </div>
           
           {/* Module Actions */}
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             <Button 
               variant="ghost"
               className="w-full bg-netflix-light-gray hover:bg-netflix-red text-netflix-text hover:text-white py-2 px-4 rounded-lg transition-all duration-200 text-sm font-medium"

@@ -113,7 +113,7 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
   };
 
   return (
-    <div className="lg:col-span-2">
+    <div className="w-full">
       <Card className="bg-netflix-gray shadow-2xl">
         <div className="relative aspect-video bg-black rounded-t-lg overflow-hidden">
           <video

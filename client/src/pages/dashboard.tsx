@@ -176,17 +176,21 @@ export default function Dashboard() {
               <div className="max-w-7xl mx-auto">
                 <h3 className="text-xl sm:text-2xl font-bold text-netflix-text mb-4 sm:mb-6">Aula Atual</h3>
                 
-                <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-                  <VideoPlayer 
-                    lesson={currentLesson}
-                    onComplete={() => handleLessonComplete(currentLesson)}
-                  />
-                  <LessonSidebar 
-                    currentLesson={currentLesson}
-                    modules={modulesList}
-                    progress={progress}
-                    onLessonSelect={handleLessonSelect}
-                  />
+                <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                  <div className="order-1 lg:col-span-2">
+                    <VideoPlayer 
+                      lesson={currentLesson}
+                      onComplete={() => handleLessonComplete(currentLesson)}
+                    />
+                  </div>
+                  <div className="order-2 lg:order-1 lg:col-span-1">
+                    <LessonSidebar 
+                      currentLesson={currentLesson}
+                      modules={modulesList}
+                      progress={progress}
+                      onLessonSelect={handleLessonSelect}
+                    />
+                  </div>
                 </div>
               </div>
             </section>
