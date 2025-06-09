@@ -40,7 +40,8 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
     onSuccess: () => {
       console.log("Lesson marked complete successfully");
       // Invalidate queries to refresh progress data
-      queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
+      const sessionId = authService.getSessionId();
+      queryClient.invalidateQueries({ queryKey: [`/api/progress?sessionId=${sessionId}`] });
       queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
       onComplete();
     },
@@ -72,7 +73,7 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
       }
       
       // Auto-complete when video reaches 95% or ends
-      const isLessonCompleted = lesson.progress?.isCompleted || lesson.isCompleted || false;
+      const isLessonCompleted = lesson.isCompleted || false;
       if (currentProgress >= 95 && !isLessonCompleted) {
         console.log("Video reached 95%, auto-completing lesson");
         completeLessonMutation.mutate();
@@ -81,7 +82,7 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
 
     const handleVideoEnd = () => {
       console.log("Video ended");
-      const isLessonCompleted = lesson.progress?.isCompleted || lesson.isCompleted || false;
+      const isLessonCompleted = lesson.isCompleted || false;
       if (!isLessonCompleted) {
         completeLessonMutation.mutate();
       }
