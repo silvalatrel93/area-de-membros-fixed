@@ -45,6 +45,7 @@ async function migrateToSupabase() {
           title: module.title,
           description: module.description,
           image_url: module.imageUrl,
+          materials_url: module.materialsUrl,
           order_index: module.orderIndex,
           is_active: module.isActive,
           created_at: module.createdAt
