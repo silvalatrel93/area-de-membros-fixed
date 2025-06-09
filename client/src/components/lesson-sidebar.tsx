@@ -160,13 +160,7 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
                 <div
                   key={lesson.id}
                   onClick={() => onLessonSelect(lesson)}
-                  className={`rounded-lg p-3 sm:p-4 cursor-pointer transition-colors duration-200 border ${
-                    status === "current" 
-                      ? "bg-netflix-red/20 border-netflix-red/30"
-                      : status === "completed"
-                      ? "bg-green-500/10 border-green-500/30 hover:bg-green-500/20"
-                      : "bg-netflix-light-gray/50 border-netflix-light-gray/30 hover:bg-netflix-light-gray"
-                  }`}
+                  className="rounded-lg p-3 sm:p-4 cursor-pointer transition-colors duration-200 border bg-netflix-red/20 border-netflix-red/30 ml-[-21px] mr-[-21px] mt-[15px] mb-[15px] pt-[14px] pb-[14px] text-[#ff0000]"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
