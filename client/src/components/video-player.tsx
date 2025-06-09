@@ -93,10 +93,16 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
     const video = videoRef.current;
     if (!video) return;
 
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      video.requestFullscreen();
+    // Check if fullscreen is supported before trying to use it
+    if (video.requestFullscreen) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        video.requestFullscreen().catch(() => {
+          // Fallback: just maximize the video within its container
+          console.log("Fullscreen not supported in this environment");
+        });
+      }
     }
   };
 
