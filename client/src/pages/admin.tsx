@@ -281,9 +281,9 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-netflix-dark">
+    <div className="device-optimized gradient-bg">
       {/* Navigation Header */}
-      <nav className="bg-gradient-to-r from-red-900 via-red-800 to-red-900 backdrop-blur-sm border-b border-red-600/30 shadow-lg shadow-red-900/20">
+      <nav className="sticky top-0 z-50 gradient-bg backdrop-blur-lg border-b border-netflix-red/20 shadow-2xl shadow-black/50">
         <div className="responsive-container">
           <div className="flex items-center justify-between h-12 sm:h-14 lg:h-16">
             <div className="flex items-center">
