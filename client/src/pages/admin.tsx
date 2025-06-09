@@ -558,7 +558,7 @@ export default function AdminPage() {
                 placeholder="Ex: Fundamentos de JavaScript"
                 value={newModule.title}
                 onChange={(e) => setNewModule({ ...newModule, title: e.target.value })}
-                className="bg-netflix-light-gray/20 border-netflix-light-gray/20 text-netflix-text mt-1"
+                className="bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text mt-1"
               />
             </div>
 
