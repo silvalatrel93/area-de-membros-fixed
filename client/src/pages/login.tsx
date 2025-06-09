@@ -52,87 +52,89 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="mobile-optimized relative overflow-hidden px-4">
+    <div className="mobile-optimized relative overflow-hidden gradient-bg">
       {/* Matrix Effect Background */}
       <MatrixEffect />
       
-      {/* Dark overlay to improve readability */}
-      <div className="absolute inset-0 bg-black/30 z-10"></div>
+      {/* Improved overlay with gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 z-10"></div>
       
       {/* Mobile-centered login container */}
-      <div className="relative z-20 flex-1 flex items-center justify-center py-8">
+      <div className="relative z-20 flex-1 flex items-center justify-center py-8 px-4">
         <div className="w-full max-w-sm">
-          <Card className="mobile-card bg-netflix-gray/90 backdrop-blur-md border-netflix-light-gray/50 shadow-2xl shadow-netflix-red/20">
-            <CardContent className="mobile-padding p-6">
+          <Card className="smooth-card">
+            <CardContent className="p-8">
               {/* Logo/Brand - Mobile optimized */}
-              <div className="text-center mb-6">
-                <h1 className="text-2xl font-bold text-netflix-text mb-3 animate-pulse-glow">
-                  <span className="block text-netflix-red mb-2 animate-pulse text-3xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
-                  <TypewriterEffect 
-                    text="IA Revolution"
-                    speed={120}
-                    delay={800}
-                    cursorChar="|"
-                    className="block glitch-effect text-xl"
-                  />
+              <div className="text-center mb-8">
+                <h1 className="text-2xl font-bold text-netflix-text mb-4 animate-pulse-glow">
+                  <div className="flex items-center justify-center space-x-2 mb-3">
+                    <span className="text-netflix-red animate-pulse text-3xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
+                    <TypewriterEffect 
+                      text="IA Revolution"
+                      speed={120}
+                      delay={800}
+                      cursorChar="|"
+                      className="glitch-effect text-xl whitespace-nowrap"
+                    />
+                  </div>
                 </h1>
-                <p className="netflix-text-secondary text-xs">Área de membros exclusiva</p>
+                <p className="netflix-text-secondary text-sm">Área de membros exclusiva</p>
               </div>
               
               {/* Login Form - Mobile optimized */}
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div>
-                  <Label htmlFor="email" className="text-netflix-text mb-2 text-sm">Email</Label>
+                  <Label htmlFor="email" className="text-netflix-text mb-3 text-sm font-medium">Email</Label>
                   <Input
                     id="email"
                     type="email"
                     placeholder="seu@email.com"
-                    className="h-12 bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text placeholder:netflix-text-secondary focus:ring-netflix-red focus:border-transparent text-base"
+                    className="h-14 bg-black/20 border-netflix-red/30 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-base rounded-xl backdrop-blur-sm"
                     {...form.register("email")}
                   />
                   {form.formState.errors.email && (
-                    <p className="text-red-400 text-xs mt-1">{form.formState.errors.email.message}</p>
+                    <p className="text-red-400 text-xs mt-2">{form.formState.errors.email.message}</p>
                   )}
                 </div>
                 
                 <div>
-                  <Label htmlFor="password" className="text-netflix-text mb-2 text-sm">Senha</Label>
+                  <Label htmlFor="password" className="text-netflix-text mb-3 text-sm font-medium">Senha</Label>
                   <Input
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    className="h-12 bg-netflix-light-gray border-netflix-light-gray/50 text-netflix-text placeholder:netflix-text-secondary focus:ring-netflix-red focus:border-transparent text-base"
+                    className="h-14 bg-black/20 border-netflix-red/30 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-base rounded-xl backdrop-blur-sm"
                     {...form.register("password")}
                   />
                   {form.formState.errors.password && (
-                    <p className="text-red-400 text-xs mt-1">{form.formState.errors.password.message}</p>
+                    <p className="text-red-400 text-xs mt-2">{form.formState.errors.password.message}</p>
                   )}
                 </div>
                 
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 bg-netflix-red hover:bg-red-700 text-white font-semibold transition-all duration-200 animate-pulse-glow text-base"
+                  className="w-full h-14 bg-gradient-to-r from-netflix-red to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold transition-all duration-300 animate-pulse-glow text-base rounded-xl shadow-lg shadow-netflix-red/25"
                 >
                   {isLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="flex items-center justify-center whitespace-nowrap">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                       Entrando...
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      <LogIn className="mr-2" size={18} />
+                    <div className="flex items-center justify-center whitespace-nowrap">
+                      <LogIn className="mr-2" size={20} />
                       Entrar na Plataforma
-                    </>
+                    </div>
                   )}
                 </Button>
               </form>
               
               {/* Security Badge - Mobile optimized */}
-              <div className="mt-4 text-center">
-                <div className="flex items-center justify-center space-x-2">
-                  <Shield className="text-green-500" size={14} />
-                  <span className="netflix-text-secondary text-xs">Acesso seguro e exclusivo para alunos</span>
+              <div className="mt-6 text-center">
+                <div className="flex items-center justify-center space-x-2 bg-green-500/10 py-2 px-4 rounded-full">
+                  <Shield className="text-green-500" size={16} />
+                  <span className="netflix-text-secondary text-xs whitespace-nowrap">Acesso seguro e exclusivo</span>
                 </div>
               </div>
             </CardContent>

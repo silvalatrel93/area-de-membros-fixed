@@ -186,38 +186,26 @@ export default function Dashboard() {
     <>
       <div className="min-h-screen">
         {/* Navigation Header */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-red-900 via-red-800 to-red-900 backdrop-blur-sm border-b border-red-600/30 shadow-lg shadow-red-900/20">
-          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-14 sm:h-16">
+        <nav className="fixed top-0 left-0 right-0 z-50 gradient-bg backdrop-blur-lg border-b border-netflix-red/20 shadow-2xl shadow-black/50">
+          <div className="px-4 max-w-md mx-auto">
+            <div className="flex items-center justify-between h-16">
               {/* Logo */}
-              <div className="flex items-center">
-                <h1 className="text-lg sm:text-xl font-bold text-netflix-text">
-                  <span className="inline text-netflix-red mr-1 sm:mr-2 text-xl font-mono">&lt;/&gt;</span>
-                  <span className="hidden xs:inline">IA Revolution</span>
-                  <span className="xs:hidden">IA Rev</span>
+              <div className="flex items-center flex-1">
+                <h1 className="text-lg font-bold text-netflix-text whitespace-nowrap">
+                  <span className="text-netflix-red mr-2 text-xl font-mono glitch-effect" data-text="</>">&lt;/&gt;</span>
+                  <span className="responsive-text">IA Revolution</span>
                 </h1>
               </div>
 
-              {/* Navigation Links - Hidden on mobile */}
-              <div className="hidden lg:block">
-                <div className="ml-10 flex items-baseline space-x-6">
-                  <a href="#" className="text-netflix-text hover:text-netflix-red transition-colors duration-200 px-3 py-2 text-sm font-medium">
-                    <Home className="inline mr-1" size={16} /> Início
-                  </a>
-                  <a href="#" className="netflix-text-secondary hover:text-netflix-red transition-colors duration-200 px-3 py-2 text-sm font-medium">
-                    <Bookmark className="inline mr-1" size={16} /> Cursos
-                  </a>
-                  <a href="#" className="netflix-text-secondary hover:text-netflix-red transition-colors duration-200 px-3 py-2 text-sm font-medium">
-                    <TrendingUp className="inline mr-1" size={16} /> Progresso
-                  </a>
-                </div>
-              </div>
-
               {/* User Actions */}
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <button className="netflix-text-secondary hover:text-netflix-text transition-colors duration-200 p-2">
-                  <Search size={18} />
-                </button>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-netflix-text hover:text-netflix-red hover:bg-transparent p-2"
+                >
+                  <Bell size={16} />
+                </Button>
                 <button className="netflix-text-secondary hover:text-netflix-text transition-colors duration-200 p-2">
                   <Bell size={18} />
                 </button>
@@ -244,44 +232,79 @@ export default function Dashboard() {
         </nav>
 
         {/* Main Content */}
-        <main className="pt-14 sm:pt-16 futuristic-bg min-h-screen">
-          {/* Welcome Hero Section */}
-          <section className="relative py-6 sm:py-8 lg:py-12 px-3 sm:px-6 lg:px-8">
-            <div className="absolute inset-0 bg-gradient-to-br from-black via-red-950/30 to-black opacity-90"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-red-900/10 via-transparent to-red-900/10"></div>
-            <div className="relative max-w-7xl mx-auto">
-              <div className="text-center lg:text-left lg:flex lg:items-center lg:justify-between">
-                <div className="lg:flex-1">
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-netflix-text mb-3 sm:mb-4">
-                    Bem-Vindo á Área de Membros {"</>"} IA Revolution
+        <main className="pt-16 gradient-bg min-h-screen">
+          {/* Mobile-optimized content */}
+          <div className="px-4 py-6 max-w-md mx-auto">
+            {!currentLesson ? (
+              /* Module Selection */
+              <div className="space-y-6">
+                <div className="text-center mb-6">
+                  <h2 className="text-xl font-bold text-netflix-text mb-3">
+                    Bem-vindo à <span className="text-netflix-red">IA Revolution</span>
                   </h2>
-                  <p className="text-base sm:text-lg netflix-text-secondary mb-4 sm:mb-6 max-w-2xl">
-                    Você está a um clique de transformar seu conhecimento.
+                  <p className="text-netflix-text-secondary text-sm mb-4">
+                    Escolha um módulo para começar sua jornada.
                   </p>
-                  <div className="grid grid-cols-3 sm:flex sm:flex-row gap-2 sm:gap-4 justify-center lg:justify-start">
-                    <Card className="bg-netflix-red/10 border-netflix-red/20">
-                      <CardContent className="p-2 sm:p-4 text-center">
-                        <div className="text-lg sm:text-2xl font-bold text-netflix-red">{completedLessons}</div>
-                        <div className="text-xs sm:text-sm netflix-text-secondary">Aulas Concluídas</div>
+                  
+                  {/* Stats Cards */}
+                  <div className="grid grid-cols-3 gap-2 mb-6">
+                    <Card className="smooth-card">
+                      <CardContent className="p-3 text-center">
+                        <div className="text-lg font-bold text-netflix-red">{completedLessons}</div>
+                        <div className="text-xs netflix-text-secondary whitespace-nowrap">Concluídas</div>
                       </CardContent>
                     </Card>
-                    <Card className="bg-blue-500/10 border-blue-500/20">
-                      <CardContent className="p-2 sm:p-4 text-center">
-                        <div className="text-lg sm:text-2xl font-bold text-blue-400">{modulesList.length}</div>
-                        <div className="text-xs sm:text-sm netflix-text-secondary">Módulos Ativos</div>
+                    <Card className="smooth-card">
+                      <CardContent className="p-3 text-center">
+                        <div className="text-lg font-bold text-blue-400">{modulesList.length}</div>
+                        <div className="text-xs netflix-text-secondary whitespace-nowrap">Módulos</div>
                       </CardContent>
                     </Card>
-                    <Card className="bg-green-500/10 border-green-500/20">
-                      <CardContent className="p-2 sm:p-4 text-center">
-                        <div className="text-lg sm:text-2xl font-bold text-green-400">{overallProgress}%</div>
-                        <div className="text-xs sm:text-sm netflix-text-secondary">Progresso Total</div>
+                    <Card className="smooth-card">
+                      <CardContent className="p-3 text-center">
+                        <div className="text-lg font-bold text-green-400">{overallProgress}%</div>
+                        <div className="text-xs netflix-text-secondary whitespace-nowrap">Progresso</div>
                       </CardContent>
                     </Card>
                   </div>
                 </div>
+
+                {modulesList && modulesList.length > 0 ? (
+                  <ModuleCarousel 
+                    modules={modulesList} 
+                    progress={combinedProgress || []} 
+                    onLessonSelect={handleLessonSelect}
+                  />
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-netflix-text-secondary text-sm">Nenhum módulo disponível no momento.</p>
+                  </div>
+                )}
               </div>
-            </div>
-          </section>
+            ) : (
+              /* Lesson View - Mobile Stack */
+              <div className="space-y-4">
+                {/* Video Player */}
+                <div className="w-full">
+                  <VideoPlayer
+                    lesson={currentLesson}
+                    onComplete={() => handleLessonComplete(currentLesson)}
+                  />
+                </div>
+                
+                {/* Lesson Sidebar - Mobile Bottom */}
+                <div className="w-full">
+                  <LessonSidebar 
+                    currentLesson={currentLesson}
+                    modules={modulesList || []}
+                    progress={combinedProgress || []}
+                    onLessonSelect={handleLessonSelect}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
 
           {/* Course Modules Carousel */}
           <section className="relative py-8 px-4 sm:px-6 lg:px-8">
