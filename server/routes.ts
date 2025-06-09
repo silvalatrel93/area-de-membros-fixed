@@ -205,7 +205,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const progress = await storage.updateProgress(progressData);
       res.json(progress);
     } catch (error) {
-      res.status(400).json({ message: "Erro ao atualizar progresso", error });
+      console.error("Progress update error:", error);
+      res.status(400).json({ message: "Erro ao atualizar progresso", error: error instanceof Error ? error.message : error });
     }
   });
 

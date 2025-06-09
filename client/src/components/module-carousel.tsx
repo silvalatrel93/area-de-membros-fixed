@@ -37,10 +37,10 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
   };
 
   return (
-    <div className="mb-8">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-2xl font-bold text-netflix-text">Módulos do Curso</h3>
-        <div className="flex space-x-2">
+    <div className="mb-6 sm:mb-8">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h3 className="text-xl sm:text-2xl font-bold text-netflix-text">Módulos do Curso</h3>
+        <div className="hidden sm:flex space-x-2">
           <Button
             variant="ghost"
             size="sm"
@@ -60,7 +60,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
       
       {/* Horizontal Scroll Container */}
       <div className="overflow-x-auto scrollbar-hide">
-        <div className="flex space-x-4 pb-4" style={{ width: "max-content" }}>
+        <div className="flex space-x-3 sm:space-x-4 pb-4" style={{ width: "max-content" }}>
           {modules.map((module, index) => {
             const moduleProgress = getModuleProgress(module.id);
             const isUnlocked = isModuleUnlocked(index);
@@ -69,7 +69,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
             return (
               <Card 
                 key={module.id}
-                className={`flex-none w-80 bg-netflix-gray hover:scale-105 transition-transform duration-300 border ${
+                className={`flex-none w-72 sm:w-80 bg-netflix-gray hover:scale-105 transition-transform duration-300 border ${
                   moduleProgress > 0 ? 'border-netflix-red/30' : 'border-netflix-light-gray/30'
                 }`}
               >
