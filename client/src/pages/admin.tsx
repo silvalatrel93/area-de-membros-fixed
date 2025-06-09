@@ -299,11 +299,9 @@ export default function AdminPage() {
                 onClick={() => setLocation("/dashboard")}
                 variant="outline"
                 size="sm"
-                className="text-xs sm:text-sm bg-netflix-light-gray/20 hover:bg-netflix-light-gray/30 border-netflix-light-gray/40"
+                className="p-2 bg-netflix-light-gray/20 hover:bg-netflix-light-gray/30 border-netflix-light-gray/40"
               >
-                <ArrowLeft className="mr-1 sm:mr-2" size={16} />
-                <span className="hidden sm:inline">Voltar</span>
-                <span className="sm:hidden">←</span>
+                <ArrowLeft size={16} />
               </Button>
               <Button
                 onClick={() => authService.logout()}
