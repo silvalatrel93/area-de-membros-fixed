@@ -75,16 +75,17 @@
 }
 
 .smooth-card {
-  @apply rounded-3xl backdrop-blur-lg border;
+  @apply rounded-3xl backdrop-blur-md border;
   background: linear-gradient(135deg, 
-    rgba(64, 64, 64, 0.95) 0%, 
-    rgba(107, 107, 107, 0.90) 100%
+    rgba(64, 64, 64, 0.15) 0%, 
+    rgba(107, 107, 107, 0.25) 50%,
+    rgba(0, 0, 0, 0.3) 100%
   );
-  border-color: rgba(220, 38, 38, 0.2);
+  border-color: rgba(220, 38, 38, 0.3);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.6),
-    0 10px 20px rgba(220, 38, 38, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 10px 20px rgba(220, 38, 38, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .dark {

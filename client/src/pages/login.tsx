@@ -56,8 +56,8 @@ export default function LoginPage() {
       {/* Matrix Effect Background */}
       <MatrixEffect />
       
-      {/* Improved overlay with gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 z-10"></div>
+      {/* Light overlay to improve text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20 z-10"></div>
       
       {/* Mobile-centered login container */}
       <div className="relative z-20 flex-1 flex items-center justify-center py-8 px-4">
@@ -89,7 +89,7 @@ export default function LoginPage() {
                     id="email"
                     type="email"
                     placeholder="seu@email.com"
-                    className="h-14 bg-black/20 border-netflix-red/30 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-base rounded-xl backdrop-blur-sm"
+                    className="h-14 bg-black/10 border-netflix-red/40 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-base rounded-xl backdrop-blur-sm"
                     {...form.register("email")}
                   />
                   {form.formState.errors.email && (
@@ -103,7 +103,7 @@ export default function LoginPage() {
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    className="h-14 bg-black/20 border-netflix-red/30 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-base rounded-xl backdrop-blur-sm"
+                    className="h-14 bg-black/10 border-netflix-red/40 text-netflix-text placeholder:netflix-text-secondary focus:ring-2 focus:ring-netflix-red focus:border-netflix-red text-base rounded-xl backdrop-blur-sm"
                     {...form.register("password")}
                   />
                   {form.formState.errors.password && (

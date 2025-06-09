@@ -103,7 +103,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
             return (
               <Card 
                 key={module.id}
-                className="rounded-lg text-card-foreground shadow-sm flex-none w-72 sm:w-80 bg-netflix-gray hover:scale-105 transition-transform duration-300 border relative overflow-hidden border-netflix-light-gray/30 ml-[9px] mr-[9px]"
+                className="smooth-card flex-none w-72 sm:w-80 hover:scale-105 transition-transform duration-300 relative overflow-hidden ml-[9px] mr-[9px]"
               >
                 {/* Matrix Code Effect Background */}
                 <MatrixCodeEffect speed={80} className="absolute inset-0 opacity-15" />
@@ -117,7 +117,7 @@ export default function ModuleCarousel({ modules, progress, onLessonSelect }: Mo
                     <div className="absolute inset-0 bg-gradient-to-t from-netflix-gray via-transparent to-transparent"></div>
                   </div>
                 )}
-                <CardContent className="p-6 relative z-10">
+                <CardContent className="p-6 relative z-10 backdrop-blur-sm">
                   <div className="flex items-center justify-between mb-3">
                     <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                       !isUnlocked 

@@ -161,19 +161,19 @@ export default function Dashboard() {
                 {/* Stats Cards */}
                 <div className="grid grid-cols-3 gap-2 mb-6">
                   <Card className="smooth-card">
-                    <CardContent className="p-3 text-center">
+                    <CardContent className="p-3 text-center backdrop-blur-sm">
                       <div className="text-lg font-bold text-netflix-red">{completedLessons}</div>
                       <div className="text-xs netflix-text-secondary whitespace-nowrap">Concluídas</div>
                     </CardContent>
                   </Card>
                   <Card className="smooth-card">
-                    <CardContent className="p-3 text-center">
+                    <CardContent className="p-3 text-center backdrop-blur-sm">
                       <div className="text-lg font-bold text-blue-400">{modulesList.length}</div>
                       <div className="text-xs netflix-text-secondary whitespace-nowrap">Módulos</div>
                     </CardContent>
                   </Card>
                   <Card className="smooth-card">
-                    <CardContent className="p-3 text-center">
+                    <CardContent className="p-3 text-center backdrop-blur-sm">
                       <div className="text-lg font-bold text-green-400">{overallProgress}%</div>
                       <div className="text-xs netflix-text-secondary whitespace-nowrap">Progresso</div>
                     </CardContent>
