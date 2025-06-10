@@ -14,22 +14,30 @@ export interface LoginResponse {
 
 export const authService = {
   async login(email: string, password: string): Promise<AuthUser> {
-    const response = await apiRequest("POST", "/api/auth/login", { email, password });
-    const data: LoginResponse = await response.json();
+    try {
+      const response = await apiRequest("POST", "/api/auth/login", { email, password });
+      const data: LoginResponse = await response.json();
 
-    if (!data.success) {
-      throw new Error(data.message);
+      if (!data.success) {
+        throw new Error(data.message || "Falha na autenticação");
+      }
+
+      const user: AuthUser = {
+        sessionId: data.sessionId,
+        isAdmin: data.isAdmin,
+      };
+
+      // Store in localStorage
+      localStorage.setItem("learnflix_auth", JSON.stringify(user));
+
+      return user;
+    } catch (error) {
+      console.error("Erro no login:", error);
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Erro de conexão. Verifique sua internet e tente novamente.");
     }
-
-    const user: AuthUser = {
-      sessionId: data.sessionId,
-      isAdmin: data.isAdmin,
-    };
-
-    // Store in localStorage
-    localStorage.setItem("learnflix_auth", JSON.stringify(user));
-
-    return user;
   },
 
   logout(): void {
