@@ -6,36 +6,26 @@ import pg from 'pg';
 const { Pool } = pg;
 
 async function testConnection() {
-  console.log('Testing database connections...');
+  console.log('🔌 Testing Supabase connection...');
   
-  const supabaseUrl = process.env.SUPABASE_DATABASE_URL;
-  const regularUrl = process.env.DATABASE_URL;
+  const databaseUrl = process.env.DATABASE_URL;
   
-  console.log('SUPABASE_DATABASE_URL exists:', !!supabaseUrl);
-  console.log('DATABASE_URL exists:', !!regularUrl);
-  
-  if (supabaseUrl) {
-    console.log('Testing Supabase connection...');
-    try {
-      const supabasePool = new Pool({ connectionString: supabaseUrl });
-      const result = await supabasePool.query('SELECT NOW() as time, COUNT(*) as modules FROM modules');
-      console.log('✅ Supabase connection successful:', result.rows[0]);
-      await supabasePool.end();
-    } catch (error) {
-      console.error('❌ Supabase connection failed:', error.message);
-    }
+  if (!databaseUrl) {
+    console.error('❌ DATABASE_URL not found in environment variables');
+    return;
   }
   
-  if (regularUrl && regularUrl !== supabaseUrl) {
-    console.log('Testing regular DB connection...');
-    try {
-      const regularPool = new Pool({ connectionString: regularUrl });
-      const result = await regularPool.query('SELECT NOW() as time');
-      console.log('✅ Regular DB connection successful:', result.rows[0]);
-      await regularPool.end();
-    } catch (error) {
-      console.error('❌ Regular DB connection failed:', error.message);
-    }
+  console.log('DATABASE_URL exists:', !!databaseUrl);
+  
+  try {
+    const pool = new Pool({ connectionString: databaseUrl });
+    const result = await pool.query('SELECT NOW() as time, version() as postgres_version');
+    console.log('✅ Supabase connection successful!');
+    console.log('📊 Server time:', result.rows[0].time);
+    console.log('🗄️ PostgreSQL version:', result.rows[0].postgres_version.split(' ')[0]);
+    await pool.end();
+  } catch (error) {
+    console.error('❌ Connection failed:', error.message);
   }
 }
 
