@@ -1,86 +1,119 @@
 
 import { Handler } from '@netlify/functions';
+import bcrypt from 'bcrypt';
+import { neon } from '@neondatabase/serverless';
+
+// Database connection
+const sql = neon(process.env.DATABASE_URL!);
+
+// Database storage class
+class DatabaseStorage {
+  async getUserByUsername(email: string) {
+    const result = await sql`
+      SELECT id, email, password, isAdmin, created_at 
+      FROM users 
+      WHERE email = ${email}
+    `;
+    return result[0] || null;
+  }
+
+  async createUser(email: string, password: string, isAdmin: boolean = false) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await sql`
+      INSERT INTO users (email, password, isAdmin)
+      VALUES (${email}, ${hashedPassword}, ${isAdmin})
+      RETURNING id, email, isAdmin, created_at
+    `;
+    return result[0];
+  }
+}
+
+const storage = new DatabaseStorage();
 
 export const handler: Handler = async (event, context) => {
-  // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
   };
 
-  // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
+  if (event.httpMethod !== 'POST') {
     return {
-      statusCode: 200,
+      statusCode: 405,
       headers,
-      body: '',
+      body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
 
   try {
-    if (event.httpMethod === 'POST') {
-      const body = JSON.parse(event.body || '{}');
-      const { email, password } = body;
+    const { email, password } = JSON.parse(event.body || '{}');
 
-      // Validar entrada
-      if (!email || !password) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({ 
-            success: false,
-            message: "Email e senha são obrigatórios" 
-          }),
-        };
-      }
-
-      // Verificar credenciais
-      const validEmail = process.env.STUDENT_EMAIL || "aluno@exemplo.com";
-      const validPassword = process.env.STUDENT_PASSWORD || "123456";
-      const adminEmail = process.env.ADMIN_EMAIL || "admin@exemplo.com";
-      const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
-
-      let isAdmin = false;
-      let isValid = false;
-
-      if (email === validEmail && password === validPassword) {
-        isValid = true;
-      } else if (email === adminEmail && password === adminPassword) {
-        isValid = true;
-        isAdmin = true;
-      }
-
-      if (!isValid) {
-        return {
-          statusCode: 401,
-          headers,
-          body: JSON.stringify({ 
-            success: false,
-            message: "Credenciais inválidas" 
-          }),
-        };
-      }
-
-      // Gerar session ID
-      const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
+    if (!email || !password) {
       return {
-        statusCode: 200,
+        statusCode: 400,
         headers,
         body: JSON.stringify({
-          success: true,
-          isAdmin,
-          sessionId,
-          message: "Login realizado com sucesso"
-        }),
+          success: false,
+          message: 'Email e senha são obrigatórios'
+        })
       };
     }
 
+    // Try to find user
+    let user = await storage.getUserByUsername(email);
+
+    // If user doesn't exist, create default users
+    if (!user) {
+      // Create admin user if logging in as admin
+      if (email === 'admin@admin.com' && password === 'admin123') {
+        user = await storage.createUser(email, password, true);
+      }
+      // Create student user if logging in as student
+      else if (email === 'aluno@aluno.com' && password === '123456') {
+        user = await storage.createUser(email, password, false);
+      }
+      else {
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({
+            success: false,
+            message: 'Credenciais inválidas'
+          })
+        };
+      }
+    }
+
+    // Verify password
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      return {
+        statusCode: 401,
+        headers,
+        body: JSON.stringify({
+          success: false,
+          message: 'Credenciais inválidas'
+        })
+      };
+    }
+
+    // Generate session ID
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
     return {
-      statusCode: 405,
+      statusCode: 200,
       headers,
-      body: JSON.stringify({ message: 'Método não permitido' }),
+      body: JSON.stringify({
+        success: true,
+        sessionId,
+        isAdmin: user.isAdmin || false,
+        message: 'Login realizado com sucesso'
+      })
     };
 
   } catch (error) {
@@ -88,11 +121,10 @@ export const handler: Handler = async (event, context) => {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         success: false,
-        message: 'Erro interno do servidor',
-        error: error instanceof Error ? error.message : 'Unknown error'
-      }),
+        message: 'Erro interno do servidor'
+      })
     };
   }
 };

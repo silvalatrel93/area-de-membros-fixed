@@ -1,14 +1,59 @@
-import type { Handler } from "@netlify/functions";
-import { Pool } from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import * as schema from "../../shared/schema";
-import { DatabaseStorage } from "../../server/storage";
 
-const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
-const db = drizzle(pool, { schema });
+import { Handler } from '@netlify/functions';
+import { neon } from '@neondatabase/serverless';
+
+// Database connection
+const sql = neon(process.env.DATABASE_URL!);
+
+// Database storage class
+class DatabaseStorage {
+  async getProgress(sessionId: string) {
+    const progress = await sql`
+      SELECT * FROM user_progress 
+      WHERE sessionId = ${sessionId}
+    `;
+    return progress;
+  }
+
+  async updateProgress(progressData: any) {
+    const { sessionId, lessonId, moduleId, completed = false, currentTime = 0 } = progressData;
+    
+    // Try to update existing progress
+    const existingProgress = await sql`
+      SELECT * FROM user_progress 
+      WHERE sessionId = ${sessionId} AND lessonId = ${lessonId}
+    `;
+
+    if (existingProgress.length > 0) {
+      const result = await sql`
+        UPDATE user_progress 
+        SET completed = ${completed}, currentTime = ${currentTime}, updatedAt = NOW()
+        WHERE sessionId = ${sessionId} AND lessonId = ${lessonId}
+        RETURNING *
+      `;
+      return result[0];
+    } else {
+      const result = await sql`
+        INSERT INTO user_progress (sessionId, lessonId, moduleId, completed, currentTime)
+        VALUES (${sessionId}, ${lessonId}, ${moduleId}, ${completed}, ${currentTime})
+        RETURNING *
+      `;
+      return result[0];
+    }
+  }
+
+  async markLessonComplete(sessionId: string, lessonId: number, moduleId: number) {
+    const result = await sql`
+      INSERT INTO user_progress (sessionId, lessonId, moduleId, completed, currentTime)
+      VALUES (${sessionId}, ${lessonId}, ${moduleId}, true, 0)
+      ON CONFLICT (sessionId, lessonId)
+      DO UPDATE SET completed = true, updatedAt = NOW()
+      RETURNING *
+    `;
+    return result[0];
+  }
+}
+
 const storage = new DatabaseStorage();
 
 export const handler: Handler = async (event, context) => {
@@ -57,11 +102,12 @@ export const handler: Handler = async (event, context) => {
     }
 
     return {
-      statusCode: 405,
+      statusCode: 400,
       headers,
-      body: JSON.stringify({ error: 'Method not allowed' })
+      body: JSON.stringify({ error: 'Missing required parameters' })
     };
   } catch (error) {
+    console.error('Progress error:', error);
     return {
       statusCode: 500,
       headers,

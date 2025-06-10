@@ -1,3 +1,4 @@
+
 [build]
   base = "."
   publish = "client/dist"
@@ -8,28 +9,48 @@
   NODE_VERSION = "20"
 
 [[redirects]]
+  from = "/api/auth"
+  to = "/.netlify/functions/auth"
+  status = 200
+
+[[redirects]]
   from = "/api/auth/*"
   to = "/.netlify/functions/auth"
   status = 200
 
 [[redirects]]
-  from = "/api/modules*"
+  from = "/api/modules"
   to = "/.netlify/functions/modules"
   status = 200
 
 [[redirects]]
-  from = "/api/lessons*"
+  from = "/api/modules/*"
+  to = "/.netlify/functions/modules"
+  status = 200
+
+[[redirects]]
+  from = "/api/lessons"
   to = "/.netlify/functions/lessons"
   status = 200
 
 [[redirects]]
-  from = "/api/progress*"
+  from = "/api/lessons/*"
+  to = "/.netlify/functions/lessons"
+  status = 200
+
+[[redirects]]
+  from = "/api/progress"
   to = "/.netlify/functions/progress"
   status = 200
 
 [[redirects]]
-  from = "/api/support*"
-  to = "/.netlify/functions/api"
+  from = "/api/progress/*"
+  to = "/.netlify/functions/progress"
+  status = 200
+
+[[redirects]]
+  from = "/api/migrate"
+  to = "/.netlify/functions/migrate"
   status = 200
 
 [[redirects]]
