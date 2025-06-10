@@ -1,0 +1,33 @@
+[build]
+  base = "."
+  publish = "client/dist"
+  command = "npm run build"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/api/login"
+  to = "/.netlify/functions/auth"
+  status = 200
+
+[[redirects]]
+  from = "/api/modules"
+  to = "/.netlify/functions/modules"
+  status = 200
+
+[[redirects]]
+  from = "/api/lessons"
+  to = "/.netlify/functions/lessons"
+  status = 200
+
+[[redirects]]
+  from = "/api/progress*"
+  to = "/.netlify/functions/progress"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
