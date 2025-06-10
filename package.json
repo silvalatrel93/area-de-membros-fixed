@@ -5,14 +5,13 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build",
+    "build:server": "tsc -p server/tsconfig.json",
     "start": "NODE_ENV=production node dist/index.js",
     "migrate": "tsx server/run-migration.ts",
-    "migrate:supabase": "tsx server/migrate-to-supabase.ts",
-    "create:tables": "tsx server/create-supabase-tables.ts",
-    "full-migration": "npm run create:tables && npm run migrate:supabase",
-    "db:check": "tsx server/check-db.ts",
-    "db:reset": "tsx server/run-migration.ts"
+    "db:migrate": "tsx server/run-migration.ts",
+    "check-db": "tsx server/check-db.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
