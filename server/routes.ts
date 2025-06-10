@@ -4,36 +4,37 @@ import { storage } from "./storage";
 import { loginSchema, insertModuleSchema, insertLessonSchema, insertProgressSchema } from "@shared/schema";
 import { z } from "zod";
 import { emailService, type SupportRequest } from "./email-service";
+import { db } from './db';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
   app.post("/api/auth/login", async (req, res) => {
     try {
       const { email, password } = loginSchema.parse(req.body);
-      
+
       // Simple auth - check if credentials match expected values
       const validEmail = process.env.STUDENT_EMAIL || "aluno@exemplo.com";
       const validPassword = process.env.STUDENT_PASSWORD || "123456";
       const adminEmail = process.env.ADMIN_EMAIL || "admin@exemplo.com";
       const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
-      
+
       let isAdmin = false;
       let isValid = false;
-      
+
       if (email === validEmail && password === validPassword) {
         isValid = true;
       } else if (email === adminEmail && password === adminPassword) {
         isValid = true;
         isAdmin = true;
       }
-      
+
       if (!isValid) {
         return res.status(401).json({ message: "Credenciais inválidas" });
       }
-      
+
       // Generate session ID
       const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       res.json({ 
         success: true, 
         isAdmin,
@@ -63,11 +64,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const module = await storage.getModule(id);
-      
+
       if (!module) {
         return res.status(404).json({ message: "Módulo não encontrado" });
       }
-      
+
       res.json(module);
     } catch (error) {
       res.status(500).json({ message: "Erro ao buscar módulo", error });
@@ -89,11 +90,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const moduleData = insertModuleSchema.partial().parse(req.body);
       const module = await storage.updateModule(id, moduleData);
-      
+
       if (!module) {
         return res.status(404).json({ message: "Módulo não encontrado" });
       }
-      
+
       res.json(module);
     } catch (error) {
       res.status(400).json({ message: "Erro ao atualizar módulo", error });
@@ -104,11 +105,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deleteModule(id);
-      
+
       if (!success) {
         return res.status(404).json({ message: "Módulo não encontrado" });
       }
-      
+
       res.json({ message: "Módulo excluído com sucesso" });
     } catch (error) {
       res.status(500).json({ message: "Erro ao excluir módulo", error });
@@ -130,11 +131,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const lesson = await storage.getLesson(id);
-      
+
       if (!lesson) {
         return res.status(404).json({ message: "Aula não encontrada" });
       }
-      
+
       res.json(lesson);
     } catch (error) {
       res.status(500).json({ message: "Erro ao buscar aula", error });
@@ -156,11 +157,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const lessonData = insertLessonSchema.partial().parse(req.body);
       const lesson = await storage.updateLesson(id, lessonData);
-      
+
       if (!lesson) {
         return res.status(404).json({ message: "Aula não encontrada" });
       }
-      
+
       res.json(lesson);
     } catch (error) {
       res.status(400).json({ message: "Erro ao atualizar aula", error });
@@ -171,11 +172,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deleteLesson(id);
-      
+
       if (!success) {
         return res.status(404).json({ message: "Aula não encontrada" });
       }
-      
+
       res.json({ message: "Aula excluída com sucesso" });
     } catch (error) {
       res.status(500).json({ message: "Erro ao excluir aula", error });
@@ -233,7 +234,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const sessionId = req.params.sessionId;
       const lessonId = parseInt(req.params.lessonId);
       const { moduleId } = z.object({ moduleId: z.number() }).parse(req.body);
-      
+
       const progress = await storage.markLessonComplete(sessionId, lessonId, moduleId);
       res.json(progress);
     } catch (error) {
