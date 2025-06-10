@@ -16,19 +16,19 @@ export const authService = {
   async login(email: string, password: string): Promise<AuthUser> {
     const response = await apiRequest("POST", "/api/auth/login", { email, password });
     const data: LoginResponse = await response.json();
-    
+
     if (!data.success) {
       throw new Error(data.message);
     }
-    
+
     const user: AuthUser = {
       sessionId: data.sessionId,
       isAdmin: data.isAdmin,
     };
-    
+
     // Store in localStorage
     localStorage.setItem("learnflix_auth", JSON.stringify(user));
-    
+
     return user;
   },
 
@@ -43,7 +43,7 @@ export const authService = {
   getCurrentUser(): AuthUser | null {
     const stored = localStorage.getItem("learnflix_auth");
     if (!stored) return null;
-    
+
     try {
       return JSON.parse(stored);
     } catch {

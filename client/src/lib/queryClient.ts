@@ -10,12 +10,13 @@ export const queryClient = new QueryClient({
   },
 });
 
-// Base URL para desenvolvimento local
-export const API_BASE_URL = 'http://localhost:5000/api';
+// Base URL para desenvolvimento
+const isDev = import.meta.env.DEV;
+export const API_BASE_URL = isDev ? '/api' : '/api';
 
 // Função para fazer requisições à API
 export async function apiRequest(method: string, endpoint: string, data?: any) {
-  const url = endpoint.startsWith('/api') ? `http://localhost:5000${endpoint}` : `${API_BASE_URL}${endpoint}`;
+  const url = endpoint.startsWith('/api') ? endpoint : `${API_BASE_URL}${endpoint}`;
   
   const options: RequestInit = {
     method,
