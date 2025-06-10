@@ -11,36 +11,67 @@ export const queryClient = new QueryClient({
 });
 
 // Base URL para a API
-export const API_BASE_URL = '/api';
+const API_BASE_URL = 'http://localhost:5001/api';
 
 // Função para fazer requisições à API
 export async function apiRequest(method: string, endpoint: string, data?: any) {
   // Garantir que o endpoint sempre comece com /api
-  const url = endpoint.startsWith('/api') ? endpoint : `/api${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+  let url = endpoint.startsWith('/api') 
+    ? `http://localhost:5001${endpoint}`
+    : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+  
+  // Adicionar sessionId como query parameter se estiver disponível e for um GET
+  if (method === 'GET') {
+    const auth = localStorage.getItem("learnflix_auth");
+    if (auth) {
+      try {
+        const user = JSON.parse(auth);
+        if (user.sessionId) {
+          const separator = url.includes('?') ? '&' : '?';
+          url += `${separator}sessionId=${user.sessionId}`;
+        }
+      } catch (error) {
+        console.error('Error parsing auth data:', error);
+      }
+    }
+  }
+  
+  console.log('Making API request to:', url);
   
   const options: RequestInit = {
     method,
     headers: {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
     },
+    credentials: 'include',
   };
 
   if (data) {
     options.body = JSON.stringify(data);
+    console.log('Request data:', data);
   }
 
   try {
+    console.log('Request options:', options);
     const response = await fetch(url, options);
+    const responseData = await response.json();
+    console.log('API Response:', responseData);
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Erro de conexão' }));
-      throw new Error(errorData.message || `Erro HTTP ${response.status}`);
+      console.error('API Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        errorData: responseData
+      });
+      throw new Error(responseData.message || `Erro HTTP ${response.status}`);
     }
 
-    return response;
+    return responseData;
   } catch (error) {
+    console.error('API Request failed:', error);
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Erro de conexão com o servidor');
+      throw new Error('Erro de conexão com o servidor. Verifique se o servidor está rodando em http://localhost:5001');
     }
     throw error;
   }

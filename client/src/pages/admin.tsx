@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
@@ -33,9 +33,22 @@ export default function AdminPage() {
   });
   const [isCreatingModule, setIsCreatingModule] = useState(false);
 
-  const { data: modules, isLoading } = useQuery({
+  const { data: modules, isLoading, error } = useQuery({
     queryKey: ["/api/modules"],
+    queryFn: () => apiRequest("GET", "/api/modules"),
+    retry: 2,
   });
+
+  // Tratamento de erro do useQuery
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Erro ao carregar módulos",
+        description: error instanceof Error ? error.message : "Erro desconhecido",
+        variant: "destructive"
+      });
+    }
+  }, [error, toast]);
 
   const moduleForm = useForm<InsertModule>({
     resolver: zodResolver(insertModuleSchema),
@@ -156,7 +169,7 @@ export default function AdminPage() {
   const handleEditModule = (module: ModuleWithLessons) => {
     setEditingModule(module);
     setNewModule({
-      title: module.title,
+      title: module.title || "",
       description: module.description || "",
       imageUrl: module.imageUrl || "",
       materialsUrl: module.materialsUrl || "",
@@ -167,7 +180,12 @@ export default function AdminPage() {
   const handleCloseModuleDialog = () => {
     setShowModuleDialog(false);
     setEditingModule(null);
-    moduleForm.reset();
+    setNewModule({
+      title: '',
+      description: '',
+      imageUrl: '',
+      materialsUrl: ''
+    });
   };
 
   const handleCreateLesson = (data: InsertLesson) => {
@@ -218,56 +236,143 @@ export default function AdminPage() {
   const modulesList = modules as ModuleWithLessons[] || [];
 
   const createNewModule = async () => {
-    if (!newModule.title.trim() || !newModule.description.trim()) {
-      toast({
-        title: "Campos obrigatórios",
-        description: "Título e descrição são obrigatórios.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsCreatingModule(true);
     try {
-      const url = editingModule ? `/api/modules/${editingModule.id}` : '/api/modules';
-      const method = editingModule ? 'PUT' : 'POST';
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newModule),
+      const response = await apiRequest("POST", "/api/modules", {
+        title: newModule.title || "",
+        description: newModule.description || "",
+        imageUrl: newModule.imageUrl || "",
+        materialsUrl: newModule.materialsUrl || "",
+        orderIndex: 0,
+        isActive: true,
       });
 
-      if (!response.ok) {
-        throw new Error(editingModule ? 'Erro ao atualizar módulo' : 'Erro ao criar módulo');
-      }
-
-      toast({
-        title: editingModule ? "Módulo atualizado com sucesso" : "Módulo criado com sucesso",
-        description: `O módulo "${newModule.title}" foi ${editingModule ? 'atualizado' : 'criado'}.`,
-      });
-
-      // Reset form and close modal
-      setNewModule({ title: '', description: '', imageUrl: '', materialsUrl: '' });
-      setEditingModule(null);
-      setShowNewModuleModal(false);
-
-      // Refresh modules list
       queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
-
+      setShowNewModuleModal(false);
+      setNewModule({
+        title: '',
+        description: '',
+        imageUrl: '',
+        materialsUrl: ''
+      });
+      toast({ title: "Módulo criado com sucesso!" });
     } catch (error) {
-      console.error('Erro ao processar módulo:', error);
-      toast({
-        title: editingModule ? "Erro ao atualizar módulo" : "Erro ao criar módulo",
-        description: error instanceof Error ? error.message : "Tente novamente mais tarde.",
-        variant: "destructive",
+      toast({ 
+        title: "Erro ao criar módulo", 
+        description: error instanceof Error ? error.message : "Erro desconhecido",
+        variant: "destructive" 
       });
     } finally {
       setIsCreatingModule(false);
     }
   };
+
+  const validateModuleForm = (data: typeof newModule) => {
+    const errors: Record<string, string> = {};
+    
+    if (!data.title?.trim()) {
+      errors.title = "O título é obrigatório";
+    }
+    
+    if (!data.description?.trim()) {
+      errors.description = "A descrição é obrigatória";
+    }
+    
+    if (data.imageUrl && !data.imageUrl.startsWith('http')) {
+      errors.imageUrl = "A URL da imagem deve ser válida";
+    }
+    
+    if (data.materialsUrl && !data.materialsUrl.startsWith('http')) {
+      errors.materialsUrl = "A URL dos materiais deve ser válida";
+    }
+    
+    return errors;
+  };
+
+  const handleCreateNewModule = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const errors = validateModuleForm(newModule);
+    if (Object.keys(errors).length > 0) {
+      Object.values(errors).forEach(error => {
+        toast({
+          title: "Erro de validação",
+          description: error,
+          variant: "destructive"
+        });
+      });
+      return;
+    }
+
+    try {
+      setIsCreatingModule(true);
+      const moduleData = {
+        title: newModule.title.trim(),
+        description: newModule.description.trim(),
+        imageUrl: newModule.imageUrl?.trim() || "",
+        materialsUrl: newModule.materialsUrl?.trim() || "",
+        orderIndex: 0,
+        isActive: true,
+      };
+
+      if (editingModule) {
+        await apiRequest("PUT", `/api/modules/${editingModule.id}`, moduleData);
+      } else {
+        await apiRequest("POST", "/api/modules", moduleData);
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
+      
+      setNewModule({
+        title: '',
+        description: '',
+        imageUrl: '',
+        materialsUrl: ''
+      });
+      setShowNewModuleModal(false);
+      setEditingModule(null);
+      
+      toast({ 
+        title: editingModule ? "Módulo atualizado com sucesso!" : "Módulo criado com sucesso!",
+        variant: "default"
+      });
+    } catch (error) {
+      toast({ 
+        title: "Erro ao processar módulo", 
+        description: error instanceof Error ? error.message : "Erro desconhecido",
+        variant: "destructive" 
+      });
+    } finally {
+      setIsCreatingModule(false);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setShowNewModuleModal(false);
+    setEditingModule(null);
+    setNewModule({
+      title: '',
+      description: '',
+      imageUrl: '',
+      materialsUrl: ''
+    });
+  };
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-netflix-dark">
+        <div className="text-center">
+          <p className="text-netflix-text text-lg font-medium mb-4">Erro ao carregar módulos</p>
+          <Button 
+            onClick={() => queryClient.invalidateQueries({ queryKey: ["/api/modules"] })}
+            className="bg-netflix-red hover:bg-red-700"
+          >
+            Tentar Novamente
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -611,7 +716,7 @@ export default function AdminPage() {
 
             <div className="flex gap-3 mt-6">
               <Button
-                onClick={createNewModule}
+                onClick={handleCreateNewModule}
                 disabled={isCreatingModule}
                 className="flex-1 bg-netflix-red hover:bg-red-700 text-white"
               >
@@ -629,11 +734,7 @@ export default function AdminPage() {
               </Button>
 
               <Button
-                onClick={() => {
-                  setNewModule({ title: '', description: '', imageUrl: '', materialsUrl: '' });
-                  setEditingModule(null);
-                  setShowNewModuleModal(false);
-                }}
+                onClick={handleCloseDialog}
                 variant="ghost"
                 className="flex-1 bg-netflix-light-gray hover:bg-netflix-text-secondary text-netflix-text hover:text-netflix-dark"
               >

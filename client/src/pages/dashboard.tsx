@@ -4,29 +4,33 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { authService } from "@/lib/auth";
-import { queryClient } from "@/lib/queryClient";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import ModuleCarousel from "@/components/module-carousel";
 import VideoPlayer from "@/components/video-player";
 import LessonSidebar from "@/components/lesson-sidebar";
 import LoadingOverlay from "@/components/loading-overlay";
 import CompletionModal from "@/components/completion-modal";
-import { Bell, LogOut, Settings } from "lucide-react";
+import { Bell, LogOut, Settings, Key } from "lucide-react";
 import type { ModuleWithLessons, LessonWithProgress, Progress } from "@shared/schema";
+import ChangePasswordModal from "@/components/change-password-modal";
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   const [currentLesson, setCurrentLesson] = useState<LessonWithProgress | null>(null);
   const [showCompletion, setShowCompletion] = useState(false);
   const [completedLesson, setCompletedLesson] = useState<LessonWithProgress | null>(null);
+  const [showChangePassword, setShowChangePassword] = useState(false);
   const sessionId = authService.getSessionId();
 
   const { data: modules, isLoading: modulesLoading } = useQuery({
-    queryKey: ["/api/modules"],
+    queryKey: ["/api/modules", sessionId],
+    queryFn: () => apiRequest("GET", `/api/modules?sessionId=${sessionId}`),
     enabled: !!sessionId,
   });
 
   const { data: progressData } = useQuery({
-    queryKey: [`/api/progress?sessionId=${sessionId}`, sessionId],
+    queryKey: [`/api/progress`, sessionId],
+    queryFn: () => apiRequest("GET", `/api/progress?sessionId=${sessionId}`),
     enabled: !!sessionId,
   });
 
@@ -129,6 +133,15 @@ export default function Dashboard() {
 
               {/* User Actions */}
               <div className="flex items-center space-x-2 md:space-x-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowChangePassword(true)}
+                  className="text-netflix-text hover:text-netflix-red hover:bg-transparent p-2 md:p-3"
+                >
+                  <Key size={16} className="md:hidden" />
+                  <Key size={20} className="hidden md:block" />
+                </Button>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -268,6 +281,11 @@ export default function Dashboard() {
         lesson={completedLesson}
         onNextLesson={handleNextLesson}
         hasNextLesson={completedLesson ? !!findNextLesson(completedLesson) : false}
+      />
+
+      <ChangePasswordModal
+        isOpen={showChangePassword}
+        onClose={() => setShowChangePassword(false)}
       />
     </>
   );

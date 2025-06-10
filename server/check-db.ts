@@ -1,60 +1,53 @@
-
-import { Pool } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import 'dotenv/config';
+import * as schema from '../shared/schema';
 
 async function checkDatabase() {
   if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL must be set");
+    console.error("❌ Error: DATABASE_URL must be set");
+    process.exit(1);
   }
 
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  console.log('🔍 Connecting to database...');
+  
+  const client = postgres(process.env.DATABASE_URL);
+  const db = drizzle(client, { schema });
   
   try {
-    console.log('🔍 Checking database status...');
+    // Test connection
+    console.log('✅ Database connection successful!');
     
-    // Check if tables exist
-    const tablesQuery = `
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public'
-      ORDER BY table_name;
-    `;
-    
-    const { rows: tables } = await pool.query(tablesQuery);
-    
-    if (tables.length === 0) {
-      console.log('⚠️  No tables found in database');
-      console.log('📝 Run migration first: npm run migrate');
-      return;
+    // Check tables
+    const modules = await db.select().from(schema.modules);
+    console.log('\n📚 Modules:', modules.length);
+    for (const module of modules) {
+      console.log(`  - ${module.title}`);
     }
     
-    console.log('📊 Found tables:');
-    for (const table of tables) {
-      console.log(`  - ${table.table_name}`);
-    }
+    const lessons = await db.select().from(schema.lessons);
+    console.log('\n📝 Lessons:', lessons.length);
     
-    // Check data counts
-    console.log('\n📈 Data counts:');
-    for (const table of tables) {
-      try {
-        const countQuery = `SELECT COUNT(*) as count FROM ${table.table_name}`;
-        const { rows } = await pool.query(countQuery);
-        console.log(`  - ${table.table_name}: ${rows[0].count} records`);
-      } catch (error) {
-        console.log(`  - ${table.table_name}: Error counting records`);
-      }
-    }
+    const users = await db.select().from(schema.users);
+    console.log('\n👥 Users:', users.length);
+    
+    const progress = await db.select().from(schema.progress);
+    console.log('\n📊 Progress records:', progress.length);
     
   } catch (error) {
     console.error('❌ Database check failed:', error);
-    throw error;
+    process.exit(1);
   } finally {
-    await pool.end();
+    await client.end();
   }
 }
 
-// Check if this file is being run directly
+// Run if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-  checkDatabase().catch(console.error);
+  checkDatabase().catch(error => {
+    console.error('❌ Unhandled error:', error);
+    process.exit(1);
+  });
 }
 
 export { checkDatabase };

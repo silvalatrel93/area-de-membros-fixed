@@ -5,27 +5,58 @@ import { loginSchema, insertModuleSchema, insertLessonSchema, insertProgressSche
 import { z } from "zod";
 import { emailService, type SupportRequest } from "./email-service";
 import { db } from './db';
+import path from 'path';
+import fs from 'fs/promises';
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Debug endpoint to check credentials configuration
+  app.get("/api/debug/credentials", async (req, res) => {
+    const validEmail = "aluno@aluno.com";
+    const validPassword = "123456";
+    const adminEmail = "admin@admin.com";
+    const adminPassword = "admin123";
+    
+    res.json({
+      studentEmail: validEmail,
+      studentPasswordLength: validPassword.length,
+      adminEmail: adminEmail,
+      adminPasswordLength: adminPassword.length,
+      environment: process.env.NODE_ENV
+    });
+  });
+
   // Auth routes
   app.post("/api/auth/login", async (req, res) => {
     try {
       const { email, password } = loginSchema.parse(req.body);
 
       // Simple auth - check if credentials match expected values
-      const validEmail = process.env.STUDENT_EMAIL || "aluno@exemplo.com";
-      const validPassword = process.env.STUDENT_PASSWORD || "123456";
-      const adminEmail = process.env.ADMIN_EMAIL || "admin@exemplo.com";
-      const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+      const validEmail = "aluno@aluno.com";
+      const validPassword = "123456";
+      const adminEmail = "admin@admin.com";
+      const adminPassword = "admin123";
+
+      console.log('Login attempt:', { 
+        email, 
+        password: password.length + ' chars',
+        validEmail, 
+        validPassword: validPassword.length + ' chars',
+        adminEmail,
+        adminPassword: adminPassword.length + ' chars'
+      });
 
       let isAdmin = false;
       let isValid = false;
 
       if (email === validEmail && password === validPassword) {
         isValid = true;
+        console.log('Student login successful');
       } else if (email === adminEmail && password === adminPassword) {
         isValid = true;
         isAdmin = true;
+        console.log('Admin login successful');
+      } else {
+        console.log('Login failed - credentials do not match');
       }
 
       if (!isValid) {
@@ -42,15 +73,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Login realizado com sucesso" 
       });
     } catch (error) {
+      console.error('Login error:', error);
       res.status(400).json({ message: "Dados inválidos", error });
+    }
+  });
+
+  app.post("/api/auth/change-password", async (req, res) => {
+    try {
+      const changePasswordSchema = z.object({
+        currentPassword: z.string().min(1, "Senha atual é obrigatória"),
+        newPassword: z.string().min(6, "Nova senha deve ter pelo menos 6 caracteres"),
+      });
+
+      const { currentPassword, newPassword } = changePasswordSchema.parse(req.body);
+
+      // Verifica se a senha atual está correta
+      const validEmail = process.env.STUDENT_EMAIL || "aluno@aluno.com";
+      const validPassword = process.env.STUDENT_PASSWORD || "123456";
+      const adminEmail = process.env.ADMIN_EMAIL || "admin@admin.com";
+      const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+
+      // Verifica se é um usuário válido
+      let isValid = false;
+      if (currentPassword === validPassword || currentPassword === adminPassword) {
+        isValid = true;
+      }
+
+      if (!isValid) {
+        return res.status(401).json({ message: "Senha atual incorreta" });
+      }
+
+      // Atualiza a senha no arquivo .env
+      const envPath = path.join(process.cwd(), '.env');
+      const envContent = await fs.readFile(envPath, 'utf8');
+      
+      // Atualiza a senha correspondente
+      const newEnvContent = envContent
+        .replace(`STUDENT_PASSWORD=${validPassword}`, `STUDENT_PASSWORD=${newPassword}`)
+        .replace(`ADMIN_PASSWORD=${adminPassword}`, `ADMIN_PASSWORD=${newPassword}`);
+
+      await fs.writeFile(envPath, newEnvContent);
+
+      // Recarrega as variáveis de ambiente
+      require('dotenv').config();
+
+      res.json({ 
+        success: true,
+        message: "Senha alterada com sucesso" 
+      });
+    } catch (error) {
+      console.error('Change password error:', error);
+      res.status(400).json({ 
+        message: "Erro ao alterar senha",
+        error: error instanceof Error ? error.message : error
+      });
     }
   });
 
   // Modules routes
   app.get("/api/modules", async (req, res) => {
     try {
+      const sessionId = req.query.sessionId as string;
+      if (!sessionId) {
+        return res.status(400).json({ message: "SessionId é obrigatório" });
+      }
+
+      // Busca os módulos com o progresso do usuário
       const modules = await storage.getModules();
-      res.json(modules);
+      const progress = await storage.getProgress(sessionId);
+
+      // Adiciona o progresso a cada módulo
+      const modulesWithProgress = modules.map(module => ({
+        ...module,
+        lessons: module.lessons.map(lesson => ({
+          ...lesson,
+          isCompleted: progress.some(p => p.lessonId === lesson.id && p.isCompleted),
+          progress: progress.find(p => p.lessonId === lesson.id)
+        }))
+      }));
+
+      res.json(modulesWithProgress);
     } catch (error) {
       console.error("Database connection error:", error);
       res.status(500).json({ 

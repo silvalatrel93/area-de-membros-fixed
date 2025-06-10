@@ -110,6 +110,12 @@ export default function LoginPage() {
                     <p className="text-red-400 text-xs md:text-sm mt-1 md:mt-2">{form.formState.errors.password.message}</p>
                   )}
                 </div>
+
+                <div className="text-netflix-text-secondary text-xs md:text-sm">
+                  <p className="mb-1">Credenciais de exemplo:</p>
+                  <p>Admin: admin@admin.com / admin123</p>
+                  <p>Aluno: aluno@aluno.com / 123456</p>
+                </div>
                 
                 <Button
                   type="submit"

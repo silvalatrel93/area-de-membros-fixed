@@ -1,4 +1,4 @@
-/api/login /.netlify/functions/auth 200
+/api/auth/login /.netlify/functions/auth 200
 /api/modules /.netlify/functions/modules 200
 /api/lessons /.netlify/functions/lessons 200
 /api/progress* /.netlify/functions/progress 200

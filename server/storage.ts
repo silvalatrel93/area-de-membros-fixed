@@ -60,16 +60,34 @@ export class DatabaseStorage implements IStorage {
           .where(and(eq(lessons.moduleId, module.id), eq(lessons.isActive, true)))
           .orderBy(asc(lessons.orderIndex));
 
+        const lessonsWithProgress = await Promise.all(
+          lessonsData.map(async (lesson) => {
+            const [lessonProgress] = await db
+              .select()
+              .from(progress)
+              .where(eq(progress.lessonId, lesson.id))
+              .orderBy(desc(progress.lastWatchedAt))
+              .limit(1);
+
+            return {
+              ...lesson,
+              isCompleted: lessonProgress?.isCompleted || false,
+              progress: lessonProgress
+            };
+          })
+        );
+
         modulesWithLessons.push({
           ...module,
-          lessons: lessonsData,
+          lessons: lessonsWithProgress,
         });
       }
 
       return modulesWithLessons;
-    } catch (error) {
-      console.error("Error fetching modules:", error);
-      throw new Error(`Database error: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error("Error fetching modules:", errorMessage);
+      throw new Error(`Database error: ${errorMessage}`);
     }
   }
 
@@ -96,9 +114,10 @@ export class DatabaseStorage implements IStorage {
         .values(moduleData)
         .returning();
       return module;
-    } catch (error) {
-      console.error("Error creating module:", error);
-      throw new Error(`Failed to create module: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      console.error("Error creating module:", errorMessage);
+      throw new Error(`Failed to create module: ${errorMessage}`);
     }
   }
 

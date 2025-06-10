@@ -39,10 +39,14 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
     },
     onSuccess: () => {
       console.log("Lesson marked complete successfully");
-      // Invalidate queries to refresh progress data
+      // Atualiza o estado local imediatamente
+      setProgress(100);
+      // Força atualização dos dados
       const sessionId = authService.getSessionId();
       queryClient.invalidateQueries({ queryKey: [`/api/progress?sessionId=${sessionId}`] });
       queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/progress/${sessionId}/modules/${lesson.moduleId}`] });
+      // Notifica o componente pai
       onComplete();
     },
     onError: (error) => {
@@ -51,8 +55,18 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
   });
 
   const updateProgressMutation = useMutation({
-    mutationFn: (progressPercentage: number) => 
-      progressService.updateProgress(lesson.id, lesson.moduleId, progressPercentage),
+    mutationFn: (progressPercentage: number) => {
+      // Garante que o progresso seja válido
+      const validProgress = Math.max(0, Math.min(100, Math.round(progressPercentage)));
+      return progressService.updateProgress(lesson.id, lesson.moduleId, validProgress);
+    },
+    onSuccess: () => {
+      // Força atualização dos dados
+      const sessionId = authService.getSessionId();
+      queryClient.invalidateQueries({ queryKey: [`/api/progress?sessionId=${sessionId}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/modules"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/progress/${sessionId}/modules/${lesson.moduleId}`] });
+    }
   });
 
   useEffect(() => {
@@ -67,14 +81,13 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
       setCurrentTime(video.currentTime);
       setProgress(currentProgress);
       
-      // Update progress every 10 seconds - only if we have valid progress
-      if (Math.floor(video.currentTime) % 10 === 0 && !isNaN(currentProgress) && currentProgress >= 0) {
+      // Update progress every 5 seconds - only if we have valid progress
+      if (Math.floor(video.currentTime) % 5 === 0 && !isNaN(currentProgress) && currentProgress >= 0) {
         updateProgressMutation.mutate(Math.round(currentProgress));
       }
       
       // Auto-complete when video reaches 95% or ends
-      const isLessonCompleted = lesson.isCompleted || false;
-      if (currentProgress >= 95 && !isLessonCompleted) {
+      if (currentProgress >= 95 && !lesson.isCompleted) {
         console.log("Video reached 95%, auto-completing lesson");
         completeLessonMutation.mutate();
       }
@@ -82,8 +95,7 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
 
     const handleVideoEnd = () => {
       console.log("Video ended");
-      const isLessonCompleted = lesson.isCompleted || false;
-      if (!isLessonCompleted) {
+      if (!lesson.isCompleted) {
         completeLessonMutation.mutate();
       }
     };
@@ -101,7 +113,7 @@ export default function VideoPlayer({ lesson, onComplete }: VideoPlayerProps) {
       video.removeEventListener('loadedmetadata', updateDuration);
       video.removeEventListener('ended', handleVideoEnd);
     };
-  }, [lesson.id, lesson.moduleId, updateProgressMutation]);
+  }, [lesson.id, lesson.moduleId, lesson.isCompleted, updateProgressMutation]);
 
   const togglePlay = () => {
     const video = videoRef.current;

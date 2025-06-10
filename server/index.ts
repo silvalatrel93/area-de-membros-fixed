@@ -1,10 +1,34 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import cors from 'cors';
+import { config } from 'dotenv';
+import { initDatabase } from './db';
+
+// Carrega as variáveis de ambiente
+config();
 
 const app = express();
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://seu-dominio.com'] 
+    : ['http://localhost:5173', 'http://localhost:5174'],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error('Error:', err);
+  res.status(500).json({
+    message: 'Erro interno do servidor',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -36,36 +60,31 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
-  const server = await registerRoutes(app);
+// Função principal para iniciar o servidor
+async function startServer() {
+  try {
+    // Inicializa o banco de dados
+    await initDatabase();
+    console.log('Banco de dados inicializado com sucesso!');
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    // Registra as rotas
+    await registerRoutes(app);
 
-    res.status(status).json({ message });
-    throw err;
-  });
+    // Define a porta
+    const port = Number(process.env.PORT) || 5001;
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+    // Inicia o servidor
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`[express] Server running at http://localhost:${port}`);
+      console.log('[express] Available on:');
+      console.log(`[express]   - http://localhost:${port}`);
+      console.log(`[express]   - http://127.0.0.1:${port}`);
+    });
+  } catch (error) {
+    console.error('Erro fatal ao iniciar o servidor:', error);
+    process.exit(1);
   }
+}
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-})();
-// Banco PostgreSQL local configurado
+// Inicia o servidor
+startServer();

@@ -32,6 +32,16 @@ export const progressService = {
     const sessionId = authService.getSessionId();
     if (!sessionId) return;
 
+    // Primeiro, marca a aula como 100% completa
+    await apiRequest("POST", "/api/progress", {
+      sessionId,
+      lessonId,
+      moduleId,
+      progressPercentage: 100,
+      isCompleted: true,
+    });
+
+    // Depois, marca oficialmente como concluída
     await apiRequest("POST", `/api/progress/${sessionId}/lessons/${lessonId}/complete`, {
       moduleId,
     });

@@ -15,8 +15,8 @@ export interface LoginResponse {
 export const authService = {
   async login(email: string, password: string): Promise<AuthUser> {
     try {
-      const response = await apiRequest("POST", "/api/auth/login", { email, password });
-      const data: LoginResponse = await response.json();
+      console.log('Tentando login com:', { email });
+      const data = await apiRequest("POST", "/api/auth/login", { email, password });
 
       if (!data.success) {
         throw new Error(data.message || "Falha na autenticação");
@@ -34,9 +34,15 @@ export const authService = {
     } catch (error) {
       console.error("Erro no login:", error);
       if (error instanceof Error) {
+        if (error.message.includes('fetch') || error.message.includes('conexão')) {
+          throw new Error("Erro de conexão com o servidor. Verifique sua internet e tente novamente.");
+        }
+        if (error.message.includes('401') || error.message.includes('Credenciais')) {
+          throw new Error("Email ou senha incorretos. Use admin@admin.com/admin123 ou aluno@aluno.com/123456");
+        }
         throw error;
       }
-      throw new Error("Erro de conexão. Verifique sua internet e tente novamente.");
+      throw new Error("Erro inesperado. Tente novamente mais tarde.");
     }
   },
 

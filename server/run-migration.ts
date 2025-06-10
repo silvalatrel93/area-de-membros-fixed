@@ -4,6 +4,9 @@ import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,7 +16,16 @@ async function runMigration() {
     throw new Error("DATABASE_URL must be set");
   }
 
-  const sql = postgres(process.env.DATABASE_URL);
+  const sql = postgres(process.env.DATABASE_URL!, {
+    ssl: { 
+      require: true,
+      rejectUnauthorized: false 
+    },
+    debug: (connection, query, params) => {
+      console.log('Query:', query);
+      console.log('Params:', params);
+    }
+  });
 
   try {
     console.log('🔄 Running database migration...');

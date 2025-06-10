@@ -28,20 +28,23 @@ export default function LessonSidebar({ currentLesson, modules, progress, onLess
   if (!currentModule) return null;
 
   const getLessonStatus = (lessonId: number) => {
+    // Primeiro verifica se é a aula atual
+    if (lessonId === currentLesson.id && currentLesson.isCompleted) {
+      return "completed";
+    }
+
+    // Depois verifica no progresso do servidor
     const lessonProgress = progress.find(p => p.lessonId === lessonId);
-    
-    // Check if completed in server data first
-    if (lessonProgress?.isCompleted) return "completed";
-    
-    // Check if this is the current lesson and it's marked as completed locally
+    if (lessonProgress?.isCompleted) {
+      return "completed";
+    }
+
+    // Se é a aula atual mas não está completa
     if (lessonId === currentLesson.id) {
-      if (currentLesson.isCompleted || 
-          (typeof currentLesson.progress === 'object' && currentLesson.progress?.isCompleted)) {
-        return "completed";
-      }
       return "current";
     }
-    
+
+    // Se não é a atual e não está completa
     return "pending";
   };
 
