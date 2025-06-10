@@ -55,3 +55,7 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+const API_BASE_URL = import.meta.env.PROD 
+  ? '' // Em produção no Netlify, usa o mesmo domínio
+  : 'http://0.0.0.0:5000';

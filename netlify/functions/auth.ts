@@ -1,77 +1,98 @@
-import type { Handler } from "@netlify/functions";
-import { Pool } from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { eq } from 'drizzle-orm';
-import * as schema from "../../shared/schema";
-import bcrypt from 'bcrypt';
 
-const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
-const db = drizzle(pool, { schema });
+import { Handler } from '@netlify/functions';
 
 export const handler: Handler = async (event, context) => {
+  // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json'
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   };
 
+  // Handle preflight requests
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
     return {
-      statusCode: 405,
+      statusCode: 200,
       headers,
-      body: JSON.stringify({ error: 'Method not allowed' })
+      body: '',
     };
   }
 
   try {
-    const { email, password } = JSON.parse(event.body || '{}');
+    if (event.httpMethod === 'POST') {
+      const body = JSON.parse(event.body || '{}');
+      const { email, password } = body;
 
-    const user = await db.query.users.findFirst({
-      where: eq(schema.users.username, email)
-    });
+      // Validar entrada
+      if (!email || !password) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({ 
+            success: false,
+            message: "Email e senha são obrigatórios" 
+          }),
+        };
+      }
 
-    if (!user || !await bcrypt.compare(password, user.password)) {
+      // Verificar credenciais
+      const validEmail = process.env.STUDENT_EMAIL || "aluno@exemplo.com";
+      const validPassword = process.env.STUDENT_PASSWORD || "123456";
+      const adminEmail = process.env.ADMIN_EMAIL || "admin@exemplo.com";
+      const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+
+      let isAdmin = false;
+      let isValid = false;
+
+      if (email === validEmail && password === validPassword) {
+        isValid = true;
+      } else if (email === adminEmail && password === adminPassword) {
+        isValid = true;
+        isAdmin = true;
+      }
+
+      if (!isValid) {
+        return {
+          statusCode: 401,
+          headers,
+          body: JSON.stringify({ 
+            success: false,
+            message: "Credenciais inválidas" 
+          }),
+        };
+      }
+
+      // Gerar session ID
+      const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
       return {
-        statusCode: 401,
+        statusCode: 200,
         headers,
         body: JSON.stringify({
-          success: false,
-          message: 'Credenciais inválidas'
-        })
+          success: true,
+          isAdmin,
+          sessionId,
+          message: "Login realizado com sucesso"
+        }),
       };
     }
 
-    const sessionId = `session_${user.id}_${Date.now()}`;
-    
     return {
-      statusCode: 200,
-      headers: {
-        ...headers,
-        'Set-Cookie': `sessionId=${sessionId}; Path=/; HttpOnly; SameSite=Strict`
-      },
-      body: JSON.stringify({
-        success: true,
-        isAdmin: user.isAdmin,
-        sessionId,
-        message: 'Login realizado com sucesso!'
-      })
+      statusCode: 405,
+      headers,
+      body: JSON.stringify({ message: 'Método não permitido' }),
     };
+
   } catch (error) {
+    console.error('Auth error:', error);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      })
+        success: false,
+        message: 'Erro interno do servidor',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }),
     };
   }
 };
