@@ -13,8 +13,9 @@ Site ficava branco em produção devido a:
 export default defineConfig({
   // ... outras configs
   base: "./", // ← ADICIONADO: força paths relativos
+  root: "client",
   build: {
-    outDir: path.resolve(import.meta.dirname, "client/dist"),
+    outDir: "dist",
     emptyOutDir: true,
   },
 });
@@ -103,4 +104,52 @@ PORT=8888
 
 ---
 
-**🚀 Agora faça o re-deploy com o ZIP corrigido!** 
+**🚀 Agora faça o re-deploy com o ZIP corrigido!**
+
+## Status Atual
+✅ **DEPLOY FINALIZADO COM SUCESSO**
+
+**URL de Deploy:** https://bucolico-halva-f573f4.netlify.app/
+
+## Problema Resolvido - Erro de Build do Netlify
+
+### Erro Encontrado (17/12/2024)
+```
+error during build:
+Could not resolve entry module "client/index.html".
+```
+
+### Causa do Problema
+A configuração do `vite.config.ts` estava inconsistente:
+- `root: "client"` (define client/ como diretório raiz)
+- `outDir: "client/dist"` (caminho absoluto, mas deveria ser relativo ao root)
+
+### Solução Aplicada
+Corrigido o `vite.config.ts`:
+```typescript
+export default defineConfig({
+  // ... outras configurações
+  root: "client",
+  build: {
+    outDir: "dist", // ✅ Caminho relativo ao root (client/)
+    emptyOutDir: true,
+  },
+  // ...
+});
+```
+
+### Arquivos Alterados
+- ✅ `vite.config.ts` - Corrigido `outDir` de `"client/dist"` para `"dist"`
+- ✅ Build teste local executado com sucesso
+- ✅ Arquivos gerados em `client/dist/` conforme esperado
+
+### Próximos Passos
+1. Fazer push das alterações para o GitHub
+2. Netlify irá automaticamente fazer rebuild
+3. Sistema deve funcionar completamente (frontend + Netlify Functions + database)
+
+## Configuração de Deploy Manual
+
+### 1. Build do Frontend
+
+// ... existing code ... 
