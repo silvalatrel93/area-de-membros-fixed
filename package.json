@@ -4,11 +4,11 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "NODE_ENV=production npm run build:client",
+    "dev": "cross-env NODE_ENV=development tsx server/index.ts",
+    "build": "cross-env NODE_ENV=production npm run build:client",
     "build:client": "vite build",
     "build:server": "echo 'Server build skipped for Netlify Functions'",
-    "start": "NODE_ENV=production node dist/index.js",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
     "migrate": "tsx server/run-migration.ts",
     "db:migrate": "tsx server/run-migration.ts",
     "check-db": "tsx server/check-db.ts"
@@ -104,6 +104,7 @@
     "@types/ws": "^8.5.13",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.30.6",
     "esbuild": "^0.25.0",
