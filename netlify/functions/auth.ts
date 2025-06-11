@@ -70,11 +70,11 @@ export const handler: Handler = async (event, context) => {
     // If user doesn't exist, create default users
     if (!user) {
       // Create admin user if logging in as admin
-      if (email === 'admin@admin.com' && password === 'admin123') {
+      if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
         user = await storage.createUser(email, password, true);
       }
       // Create student user if logging in as student
-      else if (email === 'aluno@aluno.com' && password === '123456') {
+      else if (email === process.env.STUDENT_EMAIL && password === process.env.STUDENT_PASSWORD) {
         user = await storage.createUser(email, password, false);
       }
       else {
