@@ -1,4 +1,3 @@
-
 [build]
   base = "."
   publish = "client/dist"
@@ -7,53 +6,15 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  NODE_ENV = "production"
 
 [[redirects]]
-  from = "/api/auth"
-  to = "/.netlify/functions/auth"
-  status = 200
-
-[[redirects]]
-  from = "/api/auth/*"
-  to = "/.netlify/functions/auth"
-  status = 200
-
-[[redirects]]
-  from = "/api/modules"
-  to = "/.netlify/functions/modules"
-  status = 200
-
-[[redirects]]
-  from = "/api/modules/*"
-  to = "/.netlify/functions/modules"
-  status = 200
-
-[[redirects]]
-  from = "/api/lessons"
-  to = "/.netlify/functions/lessons"
-  status = 200
-
-[[redirects]]
-  from = "/api/lessons/*"
-  to = "/.netlify/functions/lessons"
-  status = 200
-
-[[redirects]]
-  from = "/api/progress"
-  to = "/.netlify/functions/progress"
-  status = 200
-
-[[redirects]]
-  from = "/api/progress/*"
-  to = "/.netlify/functions/progress"
-  status = 200
-
-[[redirects]]
-  from = "/api/migrate"
-  to = "/.netlify/functions/migrate"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true

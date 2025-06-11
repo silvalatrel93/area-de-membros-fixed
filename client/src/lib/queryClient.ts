@@ -11,15 +11,19 @@ export const queryClient = new QueryClient({
 });
 
 // Base URL para a API
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? '' // URL vazia para usar paths relativos em produção
+  : 'http://localhost:5001/api';
 
 // Função para fazer requisições à API
 export async function apiRequest(method: string, endpoint: string, data?: any) {
-  // Garantir que o endpoint sempre comece com /api
-  let url = endpoint.startsWith('/api') 
-    ? `http://localhost:5001${endpoint}`
-    : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
-  
+  // Em produção, usar paths relativos
+  let url = process.env.NODE_ENV === 'production'
+    ? endpoint
+    : endpoint.startsWith('/api') 
+      ? `http://localhost:5001${endpoint}`
+      : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+
   // Adicionar sessionId como query parameter se estiver disponível e for um GET
   if (method === 'GET') {
     const auth = localStorage.getItem("learnflix_auth");
@@ -71,7 +75,7 @@ export async function apiRequest(method: string, endpoint: string, data?: any) {
   } catch (error) {
     console.error('API Request failed:', error);
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Erro de conexão com o servidor. Verifique se o servidor está rodando em http://localhost:5001');
+      throw new Error('Erro de conexão com o servidor. Verifique sua internet e tente novamente.');
     }
     throw error;
   }

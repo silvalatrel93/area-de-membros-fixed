@@ -28,11 +28,17 @@ export default defineConfig({
     outDir: "dist",
     emptyOutDir: true,
   },
-  base: "./",
+  base: "/",
   server: {
     fs: {
       strict: true,
       deny: ["**/.*"],
     },
+    proxy: process.env.NODE_ENV === 'development' ? {
+      '/api': {
+        target: 'http://localhost:5001',
+        changeOrigin: true,
+      }
+    } : undefined
   },
 });
