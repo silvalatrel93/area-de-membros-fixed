@@ -25,7 +25,7 @@ export default defineConfig({
   },
   root: "client",
   build: {
-    outDir: "dist",
+    outDir: "client/dist",
     emptyOutDir: true,
   },
   base: "./",
@@ -35,4 +35,4 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
-});
+}); 
